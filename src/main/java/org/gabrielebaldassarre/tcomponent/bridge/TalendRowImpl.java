@@ -80,7 +80,6 @@ public class TalendRowImpl implements TalendRow {
 		TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
 		columnvalueMap.put(column.getName(), val);
 		valueMap.put(table.getColumn(column), val);
-		System.out.println("creo valore " + val.getValue() + "in " + column.getName());
 	}
 
 	public int countValues() {
