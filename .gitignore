@@ -23,6 +23,7 @@ local.properties
 .settings/
 .loadpath
 target/
+Main.java
 
 # External tool builders
 .externalToolBuilders/
