@@ -17,12 +17,18 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 /**
- * This interface adds behavioural capabilities to flow implementations
+ * This interface adds to TalendFlow implementing it the capabilites to be visited
+ * by visitor implementing {@link TalendBehaviour} which add behaviour and extra capabilities
+ * on it, giving the possibility to expose their data. Only one behaviour is implemented atm.
  * 
  * @author Gabriele Baldassarre
  *
  */
 public interface TalendBehaviourableFlow {
-	
+	/**
+	 * Add the specific behaviour to this flow.
+	 * 
+	 * @param b is the visitor who visit the current instance and add a behaviour to.
+	 */
 	public void addBehaviour(TalendBehaviour b);
 }

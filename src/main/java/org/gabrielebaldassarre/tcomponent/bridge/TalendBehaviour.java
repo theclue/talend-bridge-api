@@ -16,9 +16,29 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+/**
+ * Classes implementing this interface can visit onr ot motr TalendFlow and add
+ * a particular behaviour to them (ie. convert data into a new form). This behaviour is
+ * then used by the concrete instance of the visitor itself.
+ * 
+ * @author Gabriele Balsassarre
+ *
+ */
 public interface TalendBehaviour {
-	
+	/**
+	 * Visit a target table and eventually perform an action on it. The action
+	 * that is made is implemented in classes implementing this interface
+	 * 
+	 * @param table the TalendFlow to visit
+	 */
 	public void visit(TalendFlow table);
 	
-	public boolean isValid();
+	/**
+	 * Based upon the concrete implementation of the class implementing this
+	 * interface, return true if the table just visited is valid for the purpose
+	 * of the behaviour/visitor. If not table was already visited, it return null
+	 * 
+	 * @return true if the already-visited table is valid for the purpose of the visitor, false otherwise and null if no table was visited already
+	 */
+	public Boolean isValid();
 }
