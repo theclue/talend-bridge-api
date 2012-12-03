@@ -33,8 +33,7 @@ public class TalendValueImpl implements TalendValue {
 	}
 
 	public boolean isColumnDefault() {
-		// TODO Auto-generated method stub
-		return false;
+		return(value == null ? false : (value.equals(column.getDefaultValue())));
 	}
 
 }
