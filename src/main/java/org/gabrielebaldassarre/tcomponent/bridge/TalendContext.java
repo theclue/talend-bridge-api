@@ -24,6 +24,8 @@ import java.util.Map;
  * Basically it summarize the internal status of a Talend execution at the time it's instantiated and provide
  * a set of accessors to use those variables by the model.
  * 
+ * TODO: Use a state model instead
+ * 
  * @author Gabriele Baldassarre
  *
  */
