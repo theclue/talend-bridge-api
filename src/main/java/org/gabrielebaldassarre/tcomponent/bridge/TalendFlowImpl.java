@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * This is the concrete implementation of a flow and therefore should not be used in normal circumnstances.
  * You should build instances using {@link TalendFlowFactory} instead.
  * 
- * @author theclue
+ * @author Gabriele Baldassarre
  *
  */
 public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
@@ -142,6 +142,10 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
         columnsList.remove((TalendColumnImpl) column);
         columns.remove(column.getName());
         columnImpls.remove(column);
+        
+        for(TalendRow row : rowList){
+        	row.setValue(column, null);
+        }
 	}
 
 	/**
