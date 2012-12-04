@@ -35,5 +35,9 @@ public class TalendValueImpl implements TalendValue {
 	public boolean isColumnDefault() {
 		return(value == null ? false : (value.equals(column.getDefaultValue())));
 	}
+	
+	public String toString(){
+		return value.toString();
+	}
 
 }
