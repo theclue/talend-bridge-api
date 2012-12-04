@@ -37,7 +37,7 @@ public class TalendValueImpl implements TalendValue {
 	}
 	
 	public String toString(){
-		return value.toString();
+		return (value != null ? value.toString() : null);
 	}
 
 }

@@ -75,7 +75,7 @@ public class TalendRowImpl implements TalendRow {
 	public void setValue(TalendColumn column, Object value) {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(table.getColumn(column) == null){
-			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column, table.getName()));
+			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
 		
 		TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
@@ -118,9 +118,9 @@ public class TalendRowImpl implements TalendRow {
 		String values = "{TalendRow flow=" + table.getName();
 		
 		for(Map.Entry<TalendColumnImpl, TalendValueImpl> item : valueMap.entrySet()){
-			values += ", " + item.getKey().getName() + "=" + (item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue().toString() + (item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
+			values += ", " + item.getKey().getName() + "=" + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue() + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
 	    }
-		values += "}\n";
+		values += "}";
 		return values;
 		
 	}
