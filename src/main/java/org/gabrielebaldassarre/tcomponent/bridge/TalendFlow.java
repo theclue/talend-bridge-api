@@ -128,14 +128,20 @@ public interface TalendFlow {
 	 */
 	public int countRows();
 	
-	//public boolean isEmpty();
-	
 	/**
 	 * Return an array with the rows contained in the flow
 	 * 
 	 * @return the array with rows
 	 */
 	public TalendRow[] getRows();
+	
+	/**
+	 * Slice the table and get only values of the specified column
+	 * 
+	 * @param column the column to get values from
+	 * @return an array containing the values from the specified column taken from each not-null row
+	 */
+	public TalendValue[] sliceRows(TalendColumn column);
 
 	/**
 	 * Let a specific flow behaviour to visit the instance

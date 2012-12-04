@@ -16,6 +16,7 @@
 */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.List;
@@ -124,7 +125,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	}
 
 	/**
-	 * TODO: cascading-delete of row data
 	 * {@inheritDoc}
 	 */
 	public synchronized void removeColumn(TalendColumn column) {
@@ -219,6 +219,22 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 */	
 	public void addBehaviour(TalendBehaviour b) {
 		b.visit(this);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */	
+	public TalendValue[] sliceRows(TalendColumn column) {
+		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
+		if (column == null || hasColumn(column)) {
+            throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumnName"), name));
+        }
+		List<TalendValue> slicedValues = new ArrayList<TalendValue>(countRows());
+		for(TalendRowImpl row : rowList){
+			slicedValues.add(row.getTalendValue(column.getName()));
+		}
+		
+		return slicedValues.toArray(new TalendValue[countRows()]);
 	}
 
 }
