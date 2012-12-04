@@ -1,9 +1,7 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -125,6 +123,11 @@ public class TalendRowImpl implements TalendRow {
 		values += "}\n";
 		return values;
 		
+	}
+	
+	public void removeColumn(TalendColumnImpl column){
+		valueMap.remove(column);
+		columnvalueMap.remove(column.getName());
 	}
 
 }

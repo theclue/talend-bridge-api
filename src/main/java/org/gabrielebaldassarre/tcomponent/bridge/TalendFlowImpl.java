@@ -147,8 +147,9 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
         columns.remove(column.getName());
         columnImpls.remove(column);
         
-        for(TalendRow row : rowList){
+        for(TalendRowImpl row : rowList){
         	row.setValue(column, null);
+        	row.removeColumn((TalendColumnImpl) column);
         }
 	}
 
