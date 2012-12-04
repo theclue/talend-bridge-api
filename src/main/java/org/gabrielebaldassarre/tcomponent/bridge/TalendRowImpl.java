@@ -1,7 +1,9 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -112,6 +114,17 @@ public class TalendRowImpl implements TalendRow {
 		for(TalendColumnImpl col : table.getColumns()){
 				setValue(new TalendValueImpl(col, col.getDefaultValue()));
 		}
+	}
+	
+	public String toString(){
+		String values = "{TalendRow flow=" + table.getName();
+		
+		for(Map.Entry<TalendColumnImpl, TalendValueImpl> item : valueMap.entrySet()){
+			values += ", " + item.getKey().getName() + "=" + (item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue().toString() + (item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
+	    }
+		values += "}\n";
+		return values;
+		
 	}
 
 }
