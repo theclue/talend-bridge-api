@@ -77,6 +77,7 @@ public class TalendRowImpl implements TalendRow {
 		if(table.getColumn(column) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column, table.getName()));
 		}
+		
 		TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
 		columnvalueMap.put(column.getName(), val);
 		valueMap.put(table.getColumn(column), val);
@@ -101,7 +102,7 @@ public class TalendRowImpl implements TalendRow {
 		}
 		TalendColumnImpl col = table.getColumn(value.getColumn());
 		TalendValueImpl val = new TalendValueImpl(col, value.getValue());
-
+		
 		columnvalueMap.put(col.getName(), val);
 		valueMap.put(col, val);
 
@@ -109,9 +110,7 @@ public class TalendRowImpl implements TalendRow {
 	
 	private void init(){
 		for(TalendColumnImpl col : table.getColumns()){
-			if(col.getDefaultValue() != null){
 				setValue(new TalendValueImpl(col, col.getDefaultValue()));
-			}
 		}
 	}
 
