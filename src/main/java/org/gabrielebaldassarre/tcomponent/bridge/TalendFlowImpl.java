@@ -83,6 +83,10 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 		if (name == null || name.isEmpty() || hasColumn(name)) {
             throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumnName"), name));
         }
+		
+		if (hasColumn(name)) {
+            throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnAlreadyUsed"), name, this.getName()));
+        }
 
 		if (defaultValue != null) {
             if (defaultValue.getClass() != type.getType()) {
