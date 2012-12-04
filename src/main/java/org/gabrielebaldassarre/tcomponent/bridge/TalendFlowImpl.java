@@ -143,14 +143,14 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
             c.index--;
         }
 
+        for(TalendRowImpl row : rowList){
+        	row.removeColumn((TalendColumnImpl) column);
+        }
+        
         columnsList.remove((TalendColumnImpl) column);
         columns.remove(column.getName());
         columnImpls.remove(column);
         
-        for(TalendRowImpl row : rowList){
-        	row.setValue(column, null);
-        	row.removeColumn((TalendColumnImpl) column);
-        }
 	}
 
 	/**
