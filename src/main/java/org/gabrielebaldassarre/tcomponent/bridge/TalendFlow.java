@@ -143,11 +143,4 @@ public interface TalendFlow {
 	 */
 	public TalendValue[] sliceRows(TalendColumn column);
 
-	/**
-	 * Let a specific flow behaviour to visit the instance
-	 * 
-	 * @param b an instance of a specific behaviour to check a flow for
-	 */
-	public void addBehaviour(TalendBehaviour b);
-
 }

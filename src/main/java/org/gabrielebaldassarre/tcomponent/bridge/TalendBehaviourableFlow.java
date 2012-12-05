@@ -30,5 +30,5 @@ public interface TalendBehaviourableFlow {
 	 * 
 	 * @param b is the visitor who visit the current instance and add a behaviour to.
 	 */
-	public void addBehaviour(TalendBehaviour b);
+	public TalendFlow addBehaviour(TalendBehaviour b);
 }
