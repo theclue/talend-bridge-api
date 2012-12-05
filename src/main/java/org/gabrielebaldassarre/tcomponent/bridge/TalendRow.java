@@ -22,6 +22,8 @@ public interface TalendRow {
 	
 	void setValue(TalendValue value);
 	
+	void setValues(Object rowStruct);
+	
 	int countValues();
 	
 	boolean isEmpty();

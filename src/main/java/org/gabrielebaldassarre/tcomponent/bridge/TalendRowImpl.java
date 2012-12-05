@@ -1,5 +1,6 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -10,15 +11,15 @@ public class TalendRowImpl implements TalendRow {
 	private TalendFlowImpl table;
 	private Map<TalendColumnImpl, TalendValueImpl> valueMap;
 	private Map<String, TalendValueImpl> columnvalueMap;
-	
+
 	public TalendRowImpl(TalendFlowImpl table){
 		this.table = table;
 		this.valueMap = new ConcurrentHashMap<TalendColumnImpl, TalendValueImpl>(table.countColumns());
 		this.columnvalueMap = new ConcurrentHashMap<String, TalendValueImpl>(table.countColumns());
-		
+
 		init();
 	}
-	
+
 	public TalendFlow getTable() {
 		return table;
 	}
@@ -77,7 +78,7 @@ public class TalendRowImpl implements TalendRow {
 		if(table.getColumn(column) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
-		
+
 		TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
 		columnvalueMap.put(column.getName(), val);
 		valueMap.put(table.getColumn(column), val);
@@ -102,32 +103,63 @@ public class TalendRowImpl implements TalendRow {
 		}
 		TalendColumnImpl col = table.getColumn(value.getColumn());
 		TalendValueImpl val = new TalendValueImpl(col, value.getValue());
-		
+
 		columnvalueMap.put(col.getName(), val);
 		valueMap.put(col, val);
 
 	}
-	
+
 	private void init(){
 		for(TalendColumnImpl col : table.getColumns()){
-				setValue(new TalendValueImpl(col, col.getDefaultValue()));
+			setValue(new TalendValueImpl(col, col.getDefaultValue()));
 		}
 	}
-	
+
 	public String toString(){
 		String values = "{TalendRow flow=" + table.getName();
-		
+
 		for(Map.Entry<TalendColumnImpl, TalendValueImpl> item : valueMap.entrySet()){
 			values += ", " + item.getKey().getName() + "=" + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue() + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
-	    }
+		}
 		values += "}";
 		return values;
-		
+
 	}
-	
+
 	public void removeColumn(TalendColumnImpl column){
 		valueMap.remove(column);
 		columnvalueMap.remove(column.getName());
+	}
+
+	public void setValues(Object rowStruct) {
+		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
+
+		Class<? extends Object> struct = rowStruct.getClass();
+			Field[] fields = struct.getFields();
+			for(Field f : fields){
+				Object value = null;
+				String column = null;
+				try {
+				value = f.get(rowStruct);
+				column = f.getName();
+				} catch (IllegalArgumentException e) {
+					throw new IllegalArgumentException(e);
+				} catch (SecurityException e) {
+					throw new SecurityException(e);
+				} catch (IllegalAccessException e) {}
+				
+				if(table.hasColumn(column)){
+					TalendType columnClass = table.getColumn(column).getType();
+					//if(columnClass.getType().equals(f.getType()) || columnClass.getPrimitiveType().equals(f.getType())){
+					if(columnClass.equals(TalendType.buildFrom(value))){
+						setValue(column, value);
+					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType(), f.getType().getSimpleName()));
+					
+				}
+
+			}
+
+
 	}
 
 }
