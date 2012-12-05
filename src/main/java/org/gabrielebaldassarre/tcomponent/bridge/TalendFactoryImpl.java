@@ -73,5 +73,21 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	public TalendValue newValue(TalendColumn column, Object value) {
 		return new TalendValueImpl((TalendColumnImpl) column, value);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public TalendRow newRow(String table, Object values) {
+		TalendRow row = newRow(table);
+		row.setValues(values);
+		return row;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public TalendRow newRow(TalendFlow table, Object values) {
+		return newRow(table.getName(), values);
+	}
 
 }
