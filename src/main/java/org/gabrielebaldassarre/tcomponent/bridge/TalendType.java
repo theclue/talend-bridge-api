@@ -80,10 +80,18 @@ public enum TalendType {
 	 * @return a TalendType instance of the right type or null if object is not a supported datatype
 	 */
 	public static TalendType buildFrom(Object obj) {
-		if (obj == null) {
+		return buildFrom(obj.getClass());
+	}
+	/**
+	 * Build an instance of TalendType from a given Class.
+	 * 
+	 * @param class a generic class from which type a TalendType instance is build from
+	 * @return a TalendType instance of the right type or null if object is not a supported datatype
+	 */	
+	public static TalendType buildFrom(Class<? extends Object> c){
+		if (c == null) {
 			return null;
 		}
-		Class<?> c = obj.getClass();
 
 		for (TalendType talendType : TalendType.values()) {
 			if (c.equals(talendType.getType())) {
