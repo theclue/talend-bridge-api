@@ -9,13 +9,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TalendRowImpl implements TalendRow {
 
 	private TalendFlowImpl table;
-	private Map<TalendColumnImpl, TalendValueImpl> valueMap;
-	private Map<String, TalendValueImpl> columnvalueMap;
+	private Map<TalendColumnImpl, TalendValue> valueMap;
+	private Map<String, TalendValue> columnvalueMap;
 
 	public TalendRowImpl(TalendFlowImpl table){
 		this.table = table;
-		this.valueMap = new ConcurrentHashMap<TalendColumnImpl, TalendValueImpl>(table.countColumns());
-		this.columnvalueMap = new ConcurrentHashMap<String, TalendValueImpl>(table.countColumns());
+		this.valueMap = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(table.countColumns());
+		this.columnvalueMap = new ConcurrentHashMap<String, TalendValue>(table.countColumns());
 
 		init();
 	}
@@ -78,8 +78,8 @@ public class TalendRowImpl implements TalendRow {
 		if(table.getColumn(column) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
-
-		TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
+		TalendValue val = table.getFactory().newValue(table.getColumn(column), value);
+		//TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
 		columnvalueMap.put(column.getName(), val);
 		valueMap.put(table.getColumn(column), val);
 	}
@@ -118,7 +118,7 @@ public class TalendRowImpl implements TalendRow {
 	public String toString(){
 		String values = "{TalendRow flow=" + table.getName();
 
-		for(Map.Entry<TalendColumnImpl, TalendValueImpl> item : valueMap.entrySet()){
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueMap.entrySet()){
 			values += ", " + item.getKey().getName() + "=" + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue() + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
 		}
 		values += "}";
@@ -150,7 +150,6 @@ public class TalendRowImpl implements TalendRow {
 				
 				if(table.hasColumn(column)){
 					TalendType columnClass = table.getColumn(column).getType();
-					//if(columnClass.getType().equals(f.getType()) || columnClass.getPrimitiveType().equals(f.getType())){
 					if(columnClass.equals(TalendType.buildFrom(value))){
 						setValue(column, value);
 					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType(), f.getType().getSimpleName()));
