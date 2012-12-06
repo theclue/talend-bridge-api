@@ -136,6 +136,15 @@ public interface TalendFlow {
 	public TalendRow[] getRows();
 	
 	/**
+	 * Get the row at specified position
+	 * 
+	 * @param rownum the row position to get
+	 * @return a reference to the row
+	 * @throws IndexOutOfBoundsException if there's no element at that position
+	 */
+	public TalendRow getRow(int rownum) throws IndexOutOfBoundsException;
+	
+	/**
 	 * Slice the flow and get only values from the specified column
 	 * 
 	 * @param column the column to get values from

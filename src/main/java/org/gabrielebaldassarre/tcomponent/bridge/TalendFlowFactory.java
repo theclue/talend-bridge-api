@@ -27,11 +27,14 @@ public interface TalendFlowFactory {
 	
 	/**
 	 * Build a new flow with the given name in the model and return a reference to it.
+	 * If you set a maximum size for the flow, only a limited number of rows can be
+	 * allocated in the flow on a date time; eldest rows are discarded as a FIFO stack.
 	 * 
 	 * @param name the name of the new flow
+	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
 	 * @return a reference to flow
 	 */
-	public TalendFlow newFlow(String name);
+	public TalendFlow newFlow(String name, Integer maximumSize);
 	
 	/**
 	 * Build a new flow with the given names and add columns on it using the public
@@ -39,8 +42,9 @@ public interface TalendFlowFactory {
 	 * 
 	 * @param name the name of the new flow
 	 * @param template the struct to get the column list from. Only public fields are used.
+	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
 	 * @return a reference to flow
 	 */
-	public TalendFlow newFlow(String name, Class<?> template);
+	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize);
 
 }
