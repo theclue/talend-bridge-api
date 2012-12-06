@@ -70,14 +70,15 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendColumnImpl addColumn(String name, TalendType type) {
-		return addColumn(name, type, null, null);
+	public TalendFlow addColumn(String name, TalendType type) {
+		addColumn(name, type, null, null);
+		return this;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendColumnImpl addColumn(String name, TalendType type, Object defaultValue, String comment) throws IllegalArgumentException {
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, String comment) throws IllegalArgumentException {
 		
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if (name == null || name.isEmpty() || hasColumn(name)) {
@@ -104,7 +105,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
         columnImpls.put(col, col);
         columnsList.add(col);
         
-        return col;
+        return this;
  	}
 
 	/**
@@ -208,8 +209,9 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendColumn addColumn(String name, TalendType type, Object defaultValue) {
-		return addColumn(name, type, defaultValue, null);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue) {
+		addColumn(name, type, defaultValue, null);
+		return this;
 	}
 
 	/**
@@ -223,7 +225,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 * @return 
 	 */	
-	public TalendFlow addBehaviour(TalendBehaviour b) {
+	public  TalendFlow addBehaviour(TalendBehaviour b) {
 		b.visit(this);
 		return this;
 	}

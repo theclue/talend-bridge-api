@@ -43,9 +43,9 @@ public interface TalendFlow {
 	 * 
 	 * @param name the name of the column; must be unique
 	 * @param type the type for the column, from supported types
-	 * @return reference to just-created column
+	 * @return a reference to the flow itself
 	 */
-	public TalendColumn addColumn(String name, TalendType type);
+	public TalendFlow addColumn(String name, TalendType type);
 	
 	/**
 	 * Add a column to current flow, with a default value
@@ -53,9 +53,9 @@ public interface TalendFlow {
 	 * @param name the name of the column; must be unique
 	 * @param type the type for the column, from supported types
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
-	 * @return reference to just-created column
+	 * @return a reference to the flow itself
 	 */
-	public TalendColumn addColumn(String name, TalendType type, Object defaultValue);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue);
 	
 	/**
 	 * Add a column to current flow, with a default value and a comment
@@ -64,9 +64,9 @@ public interface TalendFlow {
 	 * @param type the type for the column, from supported types
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
 	 * @param comment a comment literal
-	 * @return reference to just-created column
+	 * @return a reference to the flow itself
 	 */	
-	public TalendColumn addColumn(String name, TalendType type, Object defaultValue, String comment);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, String comment);
 	
 	/**
 	 * Check if the column with the given name exists in the flow
@@ -129,14 +129,14 @@ public interface TalendFlow {
 	public int countRows();
 	
 	/**
-	 * Return an array with the rows contained in the flow
+	 * Return an array with the whole set of rows contained in the flow
 	 * 
 	 * @return the array with rows
 	 */
 	public TalendRow[] getRows();
 	
 	/**
-	 * Slice the table and get only values of the specified column
+	 * Slice the flow and get only values from the specified column
 	 * 
 	 * @param column the column to get values from
 	 * @return an array containing the values from the specified column taken from each not-null row
