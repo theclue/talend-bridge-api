@@ -152,9 +152,9 @@ public class TalendRowImpl implements TalendRow {
 
 				if(table.hasColumn(column)){
 					TalendType columnClass = table.getColumn(column).getType();
-					if(columnClass.equals(TalendType.buildFrom(value))){
+					if(columnClass.equals(TalendType.buildFrom(f.getType()))){
 						setValue(column, value);
-					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType(), f.getType().getSimpleName()));
+					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType().getSimpleName(), f.getType().getSimpleName()));
 
 				}
 			}
