@@ -16,6 +16,8 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.util.Map;
+
 /**
  * This is a memory-based concrete implementation of a {@link TalendColumn} and should never be used
  * in normal conditions. A TalendColumn, built using {@link TalendFlow} methods should be build instead.
@@ -84,5 +86,14 @@ public class TalendColumnImpl implements TalendColumn{
 	 */
 	public String getComment() {
 		return comment;
+	}
+	
+	public String toString(){
+		String values = "{TalendColumn flow=" + table.getName() + ", index=" + index + ", name=" + name + ", type=" + type.getType().getSimpleName() + "}";
+
+		
+		values += "}";
+		return values;
+
 	}
 }
