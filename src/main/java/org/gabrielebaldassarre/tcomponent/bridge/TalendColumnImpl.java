@@ -89,11 +89,7 @@ public class TalendColumnImpl implements TalendColumn{
 	}
 	
 	public String toString(){
-		String values = "{TalendColumn flow=" + table.getName() + ", index=" + index + ", name=" + name + ", type=" + type.getType().getSimpleName() + "}";
-
-		
-		values += "}";
-		return values;
+		return "{TalendColumn flow=" + table.getName() + ", index=" + index + ", name=" + name + ", type=" + type.getType().getSimpleName() + "}";
 
 	}
 }
