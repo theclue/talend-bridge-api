@@ -16,6 +16,9 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 /**
  * This is a concrete implementation for the whole set of factories used by {@link TalendFlowModel}
  * and should never be instantiated in normal conditions. Factory model methods should be used instead.
@@ -88,6 +91,32 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	 */
 	public TalendRow newRow(TalendFlow table, Object values) {
 		return newRow(table.getName(), values);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TalendFlow newFlow(String name, Class<?> template) {
+		TalendFlow table = newFlow(name);
+		
+		Field[] fields = template.getFields();
+		for(Field f : fields){
+			if(!Modifier.isStatic(f.getModifiers())){
+				String column = null;
+				try {
+					column = f.getName();			
+				} catch (SecurityException e) {
+					throw new SecurityException(e);
+				} 
+
+				table.addColumn(column, TalendType.buildFrom(f.getType()));
+				
+			}
+
+		}
+		
+		return table;
+		
 	}
 
 }
