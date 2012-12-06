@@ -1,6 +1,7 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -135,28 +136,30 @@ public class TalendRowImpl implements TalendRow {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 
 		Class<? extends Object> struct = rowStruct.getClass();
-			Field[] fields = struct.getFields();
-			for(Field f : fields){
+		Field[] fields = struct.getFields();
+		for(Field f : fields){
+			if(!Modifier.isStatic(f.getModifiers())){
 				Object value = null;
 				String column = null;
 				try {
-				value = f.get(rowStruct);
-				column = f.getName();
+					value = f.get(rowStruct);
+					column = f.getName();
 				} catch (IllegalArgumentException e) {
 					throw new IllegalArgumentException(e);
 				} catch (SecurityException e) {
 					throw new SecurityException(e);
 				} catch (IllegalAccessException e) {}
-				
+
 				if(table.hasColumn(column)){
 					TalendType columnClass = table.getColumn(column).getType();
 					if(columnClass.equals(TalendType.buildFrom(value))){
 						setValue(column, value);
 					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType(), f.getType().getSimpleName()));
-					
-				}
 
+				}
 			}
+
+		}
 
 
 	}
