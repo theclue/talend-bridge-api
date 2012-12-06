@@ -26,11 +26,21 @@ package org.gabrielebaldassarre.tcomponent.bridge;
 public interface TalendFlowFactory {
 	
 	/**
-	 * Build a new flow of the given name in the model and return a reference to it.
+	 * Build a new flow with the given name in the model and return a reference to it.
 	 * 
 	 * @param name the name of the new flow
-	 * @return a reference to the just-built flow
+	 * @return a reference to flow
 	 */
 	public TalendFlow newFlow(String name);
+	
+	/**
+	 * Build a new flow with the given names and add columns on it using the public
+	 * fields of template class.
+	 * 
+	 * @param name the name of the new flow
+	 * @param template the struct to get the column list from. Only public fields are used.
+	 * @return a reference to flow
+	 */
+	public TalendFlow newFlow(String name, Class template);
 
 }
