@@ -95,7 +95,7 @@ public enum TalendType {
 		}
 
 		for (TalendType talendType : TalendType.values()) {
-			if (c.equals(talendType.getType())) {
+			if (c.equals(talendType.getType()) || c.equals(talendType.getPrimitiveType())) {
 				return talendType;
 			}
 		}
