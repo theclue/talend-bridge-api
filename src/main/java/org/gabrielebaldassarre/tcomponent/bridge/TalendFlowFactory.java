@@ -41,6 +41,6 @@ public interface TalendFlowFactory {
 	 * @param template the struct to get the column list from. Only public fields are used.
 	 * @return a reference to flow
 	 */
-	public TalendFlow newFlow(String name, Class template);
+	public TalendFlow newFlow(String name, Class<?> template);
 
 }
