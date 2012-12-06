@@ -60,21 +60,23 @@ public class TalendRowImpl implements TalendRow {
 		return (val == null ? null : val.getValue());
 	}
 
-	public void setValue(String column, Object value) {
+	public TalendRow setValue(String column, Object value) {
 		setValue(table.getColumn(column), value);
+		return this;
 	}
 
-	public void setValue(int index, Object value) throws IllegalArgumentException {
+	public TalendRow setValue(int index, Object value) throws IllegalArgumentException {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		TalendColumn col = table.getColumn(index);
 		if(col == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidIndex"), table.getName(), index));
 		}
 		setValue(col, value);
+		return this;
 
 	}
 
-	public void setValue(TalendColumn column, Object value) {
+	public TalendRow setValue(TalendColumn column, Object value) {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(table.getColumn(column) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
@@ -83,6 +85,7 @@ public class TalendRowImpl implements TalendRow {
 		//TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
 		columnvalueMap.put(column.getName(), val);
 		valueMap.put(table.getColumn(column), val);
+		return this;
 	}
 
 	public int countValues() {
@@ -97,7 +100,7 @@ public class TalendRowImpl implements TalendRow {
 		init();
 	}
 
-	public synchronized void setValue(TalendValue value) throws IllegalStateException {
+	public synchronized TalendRow setValue(TalendValue value) throws IllegalStateException {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(table.getColumn(value.getColumn()) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), value.getColumn(), table.getName()));
@@ -107,6 +110,8 @@ public class TalendRowImpl implements TalendRow {
 
 		columnvalueMap.put(col.getName(), val);
 		valueMap.put(col, val);
+		
+		return this;
 
 	}
 
@@ -132,7 +137,7 @@ public class TalendRowImpl implements TalendRow {
 		columnvalueMap.remove(column.getName());
 	}
 
-	public void setValues(Object rowStruct) {
+	public TalendRow setValues(Object rowStruct) {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 
 		Class<? extends Object> struct = rowStruct.getClass();
@@ -160,7 +165,8 @@ public class TalendRowImpl implements TalendRow {
 			}
 
 		}
-
+		
+		return this;
 
 	}
 

@@ -14,15 +14,15 @@ public interface TalendRow {
 	
 	Object getValue(String column);
 	
-	void setValue(String column, Object value);
+	TalendRow setValue(String column, Object value);
 	
-	void setValue(TalendColumn column, Object value);
+	TalendRow setValue(TalendColumn column, Object value);
 	
-	void setValue(int index, Object value);
+	TalendRow setValue(int index, Object value);
 	
-	void setValue(TalendValue value);
+	TalendRow setValue(TalendValue value);
 	
-	void setValues(Object rowStruct);
+	TalendRow setValues(Object rowStruct);
 	
 	int countValues();
 	
