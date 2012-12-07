@@ -6,7 +6,7 @@ public interface TalendRowFactory {
 	
 	public TalendRow newRow(TalendFlow table);
 	
-	public TalendRow newRow(String table, Object values);
+	public TalendRow newRow(String table, TalendRowBridgeBehaviour values);
 	
-	public TalendRow newRow(TalendFlow table, Object values);	
+	public TalendRow newRow(TalendFlow table, TalendRowBridgeBehaviour values);	
 }

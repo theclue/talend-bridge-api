@@ -80,16 +80,16 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendRow newRow(String table, Object values) {
+	public TalendRow newRow(String table, TalendRowBridgeBehaviour values) {
 		TalendRow row = newRow(table);
-		row.setValues(values);
+		values.visit(row);
 		return row;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendRow newRow(TalendFlow table, Object values) {
+	public TalendRow newRow(TalendFlow table, TalendRowBridgeBehaviour values) {
 		return newRow(table.getName(), values);
 	}
 
