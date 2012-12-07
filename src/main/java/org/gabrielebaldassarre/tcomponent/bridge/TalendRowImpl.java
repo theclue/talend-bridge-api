@@ -137,39 +137,6 @@ public class TalendRowImpl implements TalendRow, TalendBehaviourableRow {
 		columnvalueMap.remove(column.getName());
 	}
 
-	public TalendRow setValues(Object rowStruct) {
-		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-
-		Class<? extends Object> struct = rowStruct.getClass();
-		Field[] fields = struct.getFields();
-		for(Field f : fields){
-			if(!Modifier.isStatic(f.getModifiers())){
-				Object value = null;
-				String column = null;
-				try {
-					value = f.get(rowStruct);
-					column = f.getName();
-				} catch (IllegalArgumentException e) {
-					throw new IllegalArgumentException(e);
-				} catch (SecurityException e) {
-					throw new SecurityException(e);
-				} catch (IllegalAccessException e) {}
-
-				if(table.hasColumn(column)){
-					TalendType columnClass = table.getColumn(column).getType();
-					if(columnClass.equals(TalendType.buildFrom(f.getType()))){
-						setValue(column, value);
-					} else throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.columnOfWrongType"), column, table.getName(), columnClass.getType().getSimpleName(), f.getType().getSimpleName()));
-
-				}
-			}
-
-		}
-		
-		return this;
-
-	}
-
 	public TalendRow addBehaviour(TalendRowBehaviour b) {
 		b.visit(this);
 		return this;
