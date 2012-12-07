@@ -17,21 +17,21 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 /**
- * Classes implementing this interface can visit onr ot motr TalendFlow and add
+ * Classes implementing this interface can visit one or more TalendFlow and add
  * a particular behaviour to them (ie. convert data into a new form). This behaviour is
  * then used by the concrete instance of the visitor itself.
  * 
  * @author Gabriele Balsassarre
  *
  */
-public interface TalendBehaviour {
+public interface TalendRowBehaviour {
 	/**
 	 * Visit a target table and eventually perform an action on it. The action
 	 * that is made is implemented in classes implementing this interface
 	 * 
-	 * @param table the TalendFlow to visit
+	 * @param row the row to visit
 	 */
-	public void visit(TalendFlow table);
+	public void visit(TalendRow row);
 	
 	/**
 	 * Based upon the concrete implementation of the class implementing this

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TalendRowImpl implements TalendRow {
+public class TalendRowImpl implements TalendRow, TalendBehaviourableRow {
 
 	private TalendFlowImpl table;
 	private Map<TalendColumnImpl, TalendValue> valueMap;
@@ -168,6 +168,11 @@ public class TalendRowImpl implements TalendRow {
 		
 		return this;
 
+	}
+
+	public TalendRow addBehaviour(TalendRowBehaviour b) {
+		b.visit(this);
+		return this;
 	}
 
 }

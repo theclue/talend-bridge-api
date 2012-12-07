@@ -257,7 +257,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 * @return 
 	 */	
-	public  TalendFlow addBehaviour(TalendBehaviour b) {
+	public  TalendFlow addBehaviour(TalendFlowBehaviour b) {
 		b.visit(this);
 		return this;
 	}

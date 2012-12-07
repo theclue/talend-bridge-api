@@ -17,18 +17,19 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 /**
- * This interface adds to TalendFlow implementing it the capabilites to be visited
- * by visitor implementing {@link TalendBehaviour} which add behaviour and extra capabilities
- * on it, giving the possibility to expose their data. Only one behaviour is implemented atm.
+ * This interface is implemented by {@link TalendRow} and give row instances the possibility
+ * to be visited by visitor implementing {@link TalendRowBehaviour} which add behaviour and extra capabilities
+ * to them, giving the possibility to expose their data.
  * 
  * @author Gabriele Baldassarre
  *
  */
-public interface TalendBehaviourableFlow {
+public interface TalendBehaviourableRow {
 	/**
-	 * Add the specific behaviour to this flow.
+	 * Add the specific behaviour to this row.
 	 * 
-	 * @param b is the visitor who visit the current instance and add a behaviour to.
+	 * @param b is the behaviour that visits the row, carrying an action to be applied to the row
+	 * @return a reference to current row
 	 */
-	public TalendFlow addBehaviour(TalendFlowBehaviour b);
+	public TalendRow addBehaviour(TalendRowBehaviour b);
 }
