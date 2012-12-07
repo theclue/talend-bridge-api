@@ -24,14 +24,23 @@ import java.util.ResourceBundle;
 
 public class TalendRowBridgeBehaviour implements TalendRowBehaviour{
 	
-	private TalendRow row;
+	private TalendRow row = null;
+	private Object rowStruct = null;
 	
 	public TalendRowBridgeBehaviour(){
 		
 	}
 	
 	public void setFromStruct(Object rowStruct){
+		this.rowStruct = rowStruct;
+
+	}
+
+	public void visit(TalendRow row) {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
+		this.row = row;
+		
+		if(rowStruct == null) return;
 
 		Class<? extends Object> struct = rowStruct.getClass();
 		Field[] fields = struct.getFields();
@@ -58,11 +67,6 @@ public class TalendRowBridgeBehaviour implements TalendRowBehaviour{
 			}
 
 		}
-
-	}
-
-	public void visit(TalendRow row) {
-		this.row = row;
 		
 	}
 
