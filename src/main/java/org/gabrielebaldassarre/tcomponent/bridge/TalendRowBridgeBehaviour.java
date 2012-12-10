@@ -31,6 +31,10 @@ public class TalendRowBridgeBehaviour implements TalendRowBehaviour{
 		
 	}
 	
+	public TalendRowBridgeBehaviour(Object rowStruct){
+		setFromStruct(rowStruct);
+	}
+	
 	public void setFromStruct(Object rowStruct){
 		this.rowStruct = rowStruct;
 
