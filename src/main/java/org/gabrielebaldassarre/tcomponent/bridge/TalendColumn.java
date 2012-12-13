@@ -17,7 +17,7 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 /**
- * This interface represens a column of a given type which belongs to a {@see TalendFlow}.
+ * This interface rapresents a column of a given type which belongs to a {@see TalendFlow}.
  * Each column in a table has unique name and index and can have a default value of the same type
  * of the column and a literal column.
  * 
