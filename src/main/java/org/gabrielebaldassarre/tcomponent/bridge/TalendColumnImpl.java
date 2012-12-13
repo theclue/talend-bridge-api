@@ -16,6 +16,8 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.io.Serializable;
+
 /**
  * This is a memory-based concrete implementation of a {@link TalendColumn} and should never be used
  * in normal conditions. A TalendColumn, built using {@link TalendFlow} methods should be build instead.
@@ -23,8 +25,9 @@ package org.gabrielebaldassarre.tcomponent.bridge;
  * @author Gabriele Baldassarre
  *
  */
-public class TalendColumnImpl implements TalendColumn{
+public class TalendColumnImpl implements Serializable, TalendColumn{
 
+	private static final long serialVersionUID = 8383916163449740885L;
 	private TalendFlowImpl table;
 	private String name;
 	private String comment;
