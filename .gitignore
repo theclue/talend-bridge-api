@@ -24,6 +24,7 @@ local.properties
 .loadpath
 target/
 Main.java
+doc/
 
 # External tool builders
 .externalToolBuilders/
