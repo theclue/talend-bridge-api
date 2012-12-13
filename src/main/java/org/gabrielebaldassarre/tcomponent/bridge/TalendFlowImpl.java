@@ -45,14 +45,19 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 */
 	public TalendFlowImpl(TalendFlowModelImpl model, final String name, final Integer maximumSize){
-		
+				
 		this.model = model;
 		this.name = name;
 		this.columns = new ConcurrentHashMap<String, TalendColumnImpl>();
 		this.columnImpls = new ConcurrentHashMap<TalendColumnImpl, TalendColumnImpl>();
-		this.columnsList = new TalendList<TalendColumnImpl>(new LinkedList<TalendColumnImpl>());
+		this.columnsList = TalendListFactory.getInstance(TalendColumnImpl.class).newTalendList(new ArrayList<TalendColumnImpl>());
 		this.maximumSize = maximumSize;
-		this.rowList = new TalendList<TalendRowImpl>(new LinkedList<TalendRowImpl>(), maximumSize);
+		if(maximumSize == null){
+			this.rowList = TalendListFactory.getInstance(TalendRowImpl.class).newTalendList(new LinkedList<TalendRowImpl>());
+		} else {
+			this.rowList = TalendListFactory.getInstance(TalendRowImpl.class).newTalendList(new LinkedList<TalendRowImpl>(), maximumSize);
+		}
+		
 
 	}
 	
