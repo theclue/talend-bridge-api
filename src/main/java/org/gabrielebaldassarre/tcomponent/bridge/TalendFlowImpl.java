@@ -17,7 +17,6 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.List;
@@ -46,42 +45,14 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 */
 	public TalendFlowImpl(TalendFlowModelImpl model, final String name, final Integer maximumSize){
-		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-		if(maximumSize != null && maximumSize <= 0){
-			throw new IndexOutOfBoundsException(String.format(Locale.getDefault(), rb.getString("exception.invalidBufferSize"), name));
-        }
 		
 		this.model = model;
 		this.name = name;
 		this.columns = new ConcurrentHashMap<String, TalendColumnImpl>();
 		this.columnImpls = new ConcurrentHashMap<TalendColumnImpl, TalendColumnImpl>();
-		this.columnsList = new LinkedList<TalendColumnImpl>();
+		this.columnsList = new TalendList<TalendColumnImpl>(new LinkedList<TalendColumnImpl>());
 		this.maximumSize = maximumSize;
-		this.rowList = new LinkedList<TalendRowImpl>(){
-			@Override
-			public boolean add(TalendRowImpl e){
-				if(maximumSize != null && this.size() == maximumSize){
-					this.remove(0);
-				}
-				return super.add(e);
-			}
-			
-			@Override
-			public boolean addAll(Collection<? extends TalendRowImpl> c){
-				ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-				if(maximumSize != null && c.size() > maximumSize){
-					throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.bufferTooSmall"), c.size(), maximumSize));
-		        }
-				
-				if(maximumSize != null && (this.size() + c.size()) > maximumSize){
-					for(int i=0; i < c.size(); i++){
-						this.remove(0);
-					}
-				}
-				return super.addAll(c);
-			}
-			
-		};
+		this.rowList = new TalendList<TalendRowImpl>(new LinkedList<TalendRowImpl>(), maximumSize);
 
 	}
 	

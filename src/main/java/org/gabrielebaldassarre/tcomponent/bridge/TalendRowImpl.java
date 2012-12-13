@@ -1,14 +1,14 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TalendRowImpl implements TalendRow, TalendBehaviourableRow {
+public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourableRow {
 
+	private static final long serialVersionUID = 3990672272324520026L;
 	private TalendFlowImpl table;
 	private Map<TalendColumnImpl, TalendValue> valueMap;
 	private Map<String, TalendValue> columnvalueMap;
