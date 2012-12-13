@@ -16,17 +16,79 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
+import java.util.List;
+
 /**
- * This is the factory used to build new collections to be used in the model. Since this factory has no sense outside
- * of a model, use model's {@link getListFactory} to
- * get an instance of the current factory.
+ * This generic factory is used to decorate java Lists, adding different 
+ * custom properties on it.<br />
+ * Please note that this factory it's not a collection himself! It doesn't <strong>clone</strong> collections, but it <strong>decorates</strong>
+ * them, adding new features and delegating unchanging behaviours to encapsulated collection.<br />
+ * To use it, first get the factory for the proper type, than ask for an instance of the desired decorated collection:<br />
+ *
+ * <pre>
+ * {@code
+ * TalendListFactory factory = TalendListFactory.getInstance(TalendRow.class);
+ * List<TalendRow> rowList = factory.newTalendList(new LinkedList<TalendRow>());
+ * }
+ * </pre>
  * 
  * @author Gabriele Baldassarre
  *
  */
-public interface TalendListFactory {
+public class TalendListFactory<T> {
+	/**
+	 * Get a concrete instance of the factory, suitable to build collections of the given type
+	 * 
+	 * @param type the type of lists the factory will be able to build
+	 * @return a concrete instance of the factory
+	 */
+	public static <T> TalendListFactory<T> getInstance(Class<T> type){
+		return new TalendListFactory<T>();
 
-	
-	
-	
+	}
+
+	/**
+	 * Build a decorated TalendList which refers to a given collection.<br />
+	 * The decorated collection is not limited in size, at least if no such limits exists in the original delegate list.
+	 * 
+	 * @param delegate the existing collection to which a reference will be encapsulated in the decorated instance
+	 * @return a concrete implementation of a TalendList
+	 */
+	public TalendList<T> newTalendList(List<T> delegate){
+		return new TalendEndlessList<T>(delegate);
+	}
+
+	/**
+	 * Build a decorated TalendList which refers to a given collection.<br />
+	 * This TalendList <strong>is</strong> limited in size and it adds a thresold to delegate, rolling-out oldest
+	 * elements from it if maximum size is met.<br />
+	 * 
+	 * <pre>
+	 * {@code
+	 * List<String> originalList = new ArrayList<String>();
+	 * originalList.add("foo");
+	 * originalList.add("bar");
+	 * System.out.println(originalList); // [foo, bar]
+	 * 
+	 * TalendListFactory<String> factory = TalendListFactory.getInstance(String.class);
+	 * List<String> decoratedList = factory.newTalendList(originalList, 2);
+	 * 
+	 * decoratedList.add("beer");
+	 * 
+	 * System.out.println(decoratedList); // [bar, beer]
+	 * System.out.println(originalList); // [bar, beer]
+	 * }
+	 * </pre>
+	 * 
+	 * @param delegate the existing collection to which a reference will be encapsulated in the decorated instance
+	 * @param maximumSize the maximum number of elements that can take place in delegate
+	 * @return a decorated class implementing a threshold control
+	 * @throws IndexOutOfBoundsException if the initial size of delegate collection exceeds maximum size
+	 */
+	public TalendList<T> newTalendList(List<T> delegate, int maximumSize){
+		return new TalendLimitedList<T>(delegate, maximumSize);
+	}
+
 }
+
+

@@ -16,13 +16,8 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 
-
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.ForwardingList;
@@ -35,91 +30,33 @@ import com.google.common.collect.ForwardingList;
  * 
  * @author Gabriele Baldassarre
  * 
- * @param <E> the type of elements held in this collection
+ * @param <T> the type of elements held in this collection
  */
-public class TalendList<E extends Serializable> extends ForwardingList<E>{
+public abstract class TalendList<T> extends ForwardingList<T>{
 
-	protected List<E> delegate;
-	protected Integer maximumSize = null;
+	protected List<T> delegate;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<E> delegate() {
+	protected List<T> delegate() {
 		return delegate;
 	}
 
-	/**
-	 * Create a new collection decorating an existing one
-	 * 
-	 * @param delegate the collection to decorate
-	 */
-	public TalendList(List<E> delegate){
-		this.delegate = delegate;
-	}
-
-	/**
-	 * Create a new collection decorating an existing one and put a size limit on it.
-	 * If the delegate collection is too big to fit into the new collection, an exception is thrown.
-	 * 
-	 * @param delegate the collection to decorate
-	 * @param maximumSize the maximum number of elements that can be held by the collection
-	 */
-	public TalendList(List<E> delegate, Integer maximumSize){
-		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-		if(maximumSize != null && maximumSize <= 0){
-			throw new IndexOutOfBoundsException(String.format(Locale.getDefault(), rb.getString("exception.invalidBufferSize"), maximumSize));
-		}
-
-		this.delegate = delegate;
-		this.maximumSize = maximumSize;
-
-		addAll(delegate);
-
-	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean add(E e){
-		if(maximumSize != null && this.size() == maximumSize){
-			this.remove(0);
-		}
-		return super.add(e);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean addAll(Collection<? extends E> c){
-		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-		if(maximumSize != null && c.size() > maximumSize){
-			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.bufferTooSmall"), c.size(), maximumSize));
-		}
-
-		if(maximumSize != null && (this.size() + c.size()) > maximumSize){
-			for(int i=0; i < c.size(); i++){
-				this.remove(0);
-			}
-		}
-		return super.addAll(c);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Iterator<E> iterator() {
-		final Iterator<E> iter = super.iterator();
-		return new ForwardingIterator<E>() {
-			@Override protected Iterator<E> delegate() {
+	public Iterator<T> iterator() {
+		final Iterator<T> iter = super.iterator();
+		return new ForwardingIterator<T>() {
+			@Override protected Iterator<T> delegate() {
 				return iter;
 			}
-			@Override public E next() {
-				E v = super.next();
+			@Override public T next() {
+				T v = super.next();
 				return (v); 
 			}
 		};
