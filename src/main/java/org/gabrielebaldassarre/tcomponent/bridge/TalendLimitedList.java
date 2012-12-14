@@ -26,8 +26,8 @@ import java.util.ResourceBundle;
  * is met, then the oldest elements are kicked out, in a very simple FIFO strategy.<br />
  * Please note that <strong>this is a decorating class</strong>, nor a cloning or proxying one.
  * This means that you are very likely to encounter very unpredictable side effects if you continue to
- * use the delegate collection (ie. adding new elements on it) after having decorated it using this class' concrete implementations.<br />
- * This happens because delegate list won't know of herself being constrained, while decorated list won't know of delegate still being used.<br />
+ * use the delegate collection (ie. adding new elements on it) after having decorated it using this class' instences<br />
+ * This happens because delegate list won't know of herself being constrained, while decorated one ignores of delegate still being used.<br />
  * <br />
  * This class should never be used directly.<br />
  * The best way to build instances of this type is to call the provided {@link TalendListFactory} set of methods, which choose the best concrete implementation of {@link TalendList}, instead.
