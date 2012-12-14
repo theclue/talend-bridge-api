@@ -49,7 +49,7 @@ public class TalendListFactory<T> {
 
 	/**
 	 * Build a decorated TalendList which refers to a given collection.<br />
-	 * The decorated collection is not limited in size, at least if no such limits exists in the original delegate list.
+	 * The decorated collection is not limited in size, at least it's not if no limits exists in the original delegate list.
 	 * 
 	 * @param delegate the existing collection to which a reference will be encapsulated in the decorated instance
 	 * @return a concrete implementation of a TalendList

@@ -23,21 +23,23 @@ import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.ForwardingList;
 
 /**
- * TalendList is a decoration of any valid java Collection. Although its behaviour is
- * similar to delegate in most circumnstances, it support an optional parameter to keep
- * the maximum size of the collection not exceeded a given limit, rolling out older data
- * in a FIFO strategy.
+ * This abstract class provides the needed declarations of methods used to decorate
+ * any standard java List. This class implements the decorator pattern, allowing subclasses to
+ * override methods from List or to delegate to original List methods if not in need to override.<br />
+ * Please note that <strong>this is a decorating class</strong>, nor a cloning or proxying one.
+ * This means that you are very likely to encounter very unpredictable side effects if you continue to
+ * use the delegate collection after having decorated it using this class' concrete implementations.
  * 
  * @author Gabriele Baldassarre
- * 
  * @param <T> the type of elements held in this collection
+ * @see <a href="https://code.google.com/p/guava-libraries/wiki/CollectionHelpersExplained#Forwarding_Decorators">Forwarding Decorators</a>
  */
 public abstract class TalendList<T> extends ForwardingList<T>{
 
 	protected List<T> delegate;
 
 	/**
-	 * {@inheritDoc}
+	 * Return a reference to delegated list, allowing to call original List methods
 	 */
 	@Override
 	protected List<T> delegate() {

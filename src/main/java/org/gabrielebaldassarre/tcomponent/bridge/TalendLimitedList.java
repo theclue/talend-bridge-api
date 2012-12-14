@@ -21,6 +21,30 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * This class decorates an existing java List, adding a size limit to it. If the maximum Size of the collection
+ * is met, then the oldest elements are kicked out, in a very simple FIFO strategy.<br />
+ * Please note that <strong>this is a decorating class</strong>, nor a cloning or proxying one.
+ * This means that you are very likely to encounter very unpredictable side effects if you continue to
+ * use the delegate collection (ie. adding new elements on it) after having decorated it using this class' concrete implementations.<br />
+ * This happens because delegate list won't know of herself being constrained, while decorated list won't know of delegate still being used.<br />
+ * <br />
+ * This class should never be used directly.<br />
+ * The best way to build instances of this type is to call the provided {@link TalendListFactory} set of methods, which choose the best concrete implementation of {@link TalendList}, instead.
+ * 
+ * <pre>
+ * {@code
+ * 
+ * TalendListFactory<String> factory = TalendListFactory.getInstance(String.class);
+ * List<String> decoratedList = factory.newTalendList(new ArrayList(), 2);
+
+ * }
+ * </pre>
+ * 
+ * @author Gabriele Baldassarre
+ * @param <T> the type of elements held in this collection
+ * @see TalendListFactory
+ */
 public class TalendLimitedList<T> extends TalendList<T>{
 
 	protected List<T> delegate;
@@ -36,22 +60,26 @@ public class TalendLimitedList<T> extends TalendList<T>{
 
 
 	/**
-	 * Create a new collection decorating an existing one and put a size limit on it.
-	 * If the delegate collection is too big to fit into the new collection, an exception is thrown.
+	 * Create a new collection decorating an existing one and put a size limit on it. If this limit is met, oldest elements
+	 * are kicked out from the collection.
 	 * 
 	 * @param delegate the collection to decorate
-	 * @param maximumSize the maximum number of elements that can be held by the collection
+	 * @param maximumSize the maximum number of elements that can be held by the collection at any time
+	 * @throws IndexOutOfBoundsException if maximumSize is minus or equal to zero
+	 * @throws IllegalArgumentException if the delegate collection has already too many elements to bo contrained to maximumSize
 	 */
 	public TalendLimitedList(List<T> delegate, int maximumSize){
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(maximumSize <= 0){
 			throw new IndexOutOfBoundsException(String.format(Locale.getDefault(), rb.getString("exception.invalidBufferSize"), maximumSize));
 		}
+		
+		if(delegate.size() > maximumSize){
+			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.bufferTooSmall"), delegate.size(), maximumSize));
+		}
 
 		this.delegate = delegate;
 		this.maximumSize = maximumSize;
-
-		//addAll(delegate);
 
 	}
 
@@ -72,7 +100,7 @@ public class TalendLimitedList<T> extends TalendList<T>{
 	@Override
 	public boolean addAll(Collection<? extends T> c){
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-		if(maximumSize != null && c.size() > maximumSize){
+		if(c.size() > maximumSize){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.bufferTooSmall"), c.size(), maximumSize));
 		}
 
