@@ -21,10 +21,11 @@ import java.util.List;
 /**
  * This generic factory is used to decorate java Lists, adding different 
  * custom properties on it.<br />
- * Please note that this factory it's not a collection himself! It doesn't <strong>clone</strong> collections, but it <strong>decorates</strong>
- * them, adding new features and delegating unchanging behaviours to encapsulated collection.<br />
  * To use it, first get the factory for the proper type, than ask for an instance of the desired decorated collection:<br />
- *
+ * Please note that <strong>this is a decorating class</strong>, nor a cloning or proxying one.
+ * This means that you are very likely to encounter very unpredictable side effects if you continue to
+ * use the delegate collection (ie. adding new elements on it) after having decorated it using this class' instences<br />
+ * This happens because delegate list won't know of herself being constrained, while decorated one ignores of delegate still being used.<br />
  * <pre>
  * {@code
  * TalendListFactory factory = TalendListFactory.getInstance(TalendRow.class);
@@ -37,7 +38,7 @@ import java.util.List;
  */
 public class TalendListFactory<T> {
 	/**
-	 * Get a concrete instance of the factory, suitable to build collections of the given type
+	 * Get a concrete instance of the factory, suitable to build collections of a given type
 	 * 
 	 * @param type the type of lists the factory will be able to build
 	 * @return a concrete instance of the factory
@@ -54,28 +55,28 @@ public class TalendListFactory<T> {
 	 * @param delegate the existing collection to which a reference will be encapsulated in the decorated instance
 	 * @return a concrete implementation of a TalendList
 	 */
-	public TalendList<T> newTalendList(List<T> delegate){
+	public List<T> newTalendList(List<T> delegate){
 		return new TalendEndlessList<T>(delegate);
 	}
 
 	/**
 	 * Build a decorated TalendList which refers to a given collection.<br />
-	 * This TalendList <strong>is</strong> limited in size and it adds a thresold to delegate, rolling-out oldest
-	 * elements from it if maximum size is met.<br />
-	 * 
+	 * If the maximum size of the collection is met, then the oldest elements are kicked out, in a very simple FIFO strategy.<br />
+	 * <br />
 	 * <pre>
 	 * {@code
-	 * List<String> originalList = new ArrayList<String>();
-	 * originalList.add("foo");
-	 * originalList.add("bar");
 	 * System.out.println(originalList); // [foo, bar]
 	 * 
 	 * TalendListFactory<String> factory = TalendListFactory.getInstance(String.class);
-	 * List<String> decoratedList = factory.newTalendList(originalList, 2);
+	 * List<String> decoratedList = factory.newTalendList(new ArrayList<String>(), 2);
+	 * 
+	 * decoratedList.add("foo");
+	 * decoratedList.add("bar");
+	 * 
+	 * System.out.println(decoratedList); // [foo, bar]
 	 * 
 	 * decoratedList.add("beer");
 	 * 
-	 * System.out.println(decoratedList); // [bar, beer]
 	 * System.out.println(originalList); // [bar, beer]
 	 * }
 	 * </pre>
@@ -85,7 +86,7 @@ public class TalendListFactory<T> {
 	 * @return a decorated class implementing a threshold control
 	 * @throws IndexOutOfBoundsException if the initial size of delegate collection exceeds maximum size
 	 */
-	public TalendList<T> newTalendList(List<T> delegate, int maximumSize){
+	public List<T> newTalendList(List<T> delegate, int maximumSize){
 		return new TalendLimitedList<T>(delegate, maximumSize);
 	}
 

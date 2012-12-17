@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * This class decorates an existing java List, adding a size limit to it. If the maximum Size of the collection
+ * This class decorates an existing java List, adding a size limit to it. If the maximum size of the collection
  * is met, then the oldest elements are kicked out, in a very simple FIFO strategy.<br />
  * Please note that <strong>this is a decorating class</strong>, nor a cloning or proxying one.
  * This means that you are very likely to encounter very unpredictable side effects if you continue to
