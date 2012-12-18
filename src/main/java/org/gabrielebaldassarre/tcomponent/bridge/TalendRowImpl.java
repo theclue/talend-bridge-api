@@ -11,13 +11,12 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	private static final long serialVersionUID = 3990672272324520026L;
 	private TalendFlowImpl table;
 	private Map<TalendColumnImpl, TalendValue> valueMap;
-	private Map<String, TalendValue> columnvalueMap;
-
+	private Map<TalendColumnImpl, TalendValue> valueDraft;
+	
 	public TalendRowImpl(TalendFlowImpl table){
 		this.table = table;
 		this.valueMap = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(table.countColumns());
-		this.columnvalueMap = new ConcurrentHashMap<String, TalendValue>(table.countColumns());
-
+		this.valueDraft = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(table.countColumns());
 		init();
 	}
 
@@ -34,7 +33,10 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	}
 
 	public TalendValue getTalendValue(String column) throws IllegalArgumentException {
-		return columnvalueMap.get(column);
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueMap.entrySet()){
+			if(item.getKey().getName().equals(column)) return item.getValue();
+		}
+		return null;
 	}
 
 	public TalendValue[] getTalendValues() {
@@ -82,9 +84,9 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
 		TalendValue val = table.getFactory().newValue(table.getColumn(column), value);
-		//TalendValueImpl val = new TalendValueImpl(table.getColumn(column), value);
-		columnvalueMap.put(column.getName(), val);
-		valueMap.put(table.getColumn(column), val);
+		
+		setValue(val);
+
 		return this;
 	}
 
@@ -105,14 +107,13 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		if(table.getColumn(value.getColumn()) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), value.getColumn(), table.getName()));
 		}
+		
 		TalendColumnImpl col = table.getColumn(value.getColumn());
+		
 		TalendValueImpl val = new TalendValueImpl(col, value.getValue());
-
-		columnvalueMap.put(col.getName(), val);
-		valueMap.put(col, val);
+		valueDraft.put(col, val);
 		
 		return this;
-
 	}
 
 	private void init(){
@@ -134,12 +135,33 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 
 	public void removeColumn(TalendColumnImpl column){
 		valueMap.remove(column);
-		columnvalueMap.remove(column.getName());
 	}
 
 	public TalendRow addBehaviour(TalendRowBehaviour b) {
 		b.visit(this);
 		return this;
+	}
+
+	public TalendRow save() {
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueDraft.entrySet()){
+			if(item.getValue().getValue() == null){
+				valueDraft.remove(item.getKey());
+				valueMap.remove(item.getKey());
+			}
+		}
+		valueMap.putAll(valueDraft);
+		valueDraft.clear();
+
+		return this;
+	}
+
+	public boolean isChanged() {
+		return valueDraft.size() > 0 ? true : false;
+	}
+
+	public void discardChanges() {
+		valueDraft.clear();
+		
 	}
 
 }

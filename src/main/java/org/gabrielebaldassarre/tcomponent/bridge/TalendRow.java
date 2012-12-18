@@ -28,5 +28,11 @@ public interface TalendRow {
 	
 	void truncate();
 	
+	TalendRow save();
+	
+	void discardChanges();
+	
+	boolean isChanged();
+	
 	
 }
