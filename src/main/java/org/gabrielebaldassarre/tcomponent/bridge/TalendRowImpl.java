@@ -145,11 +145,11 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	public TalendRow save() {
 		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueDraft.entrySet()){
 			if(item.getValue().getValue() == null){
-				valueDraft.remove(item.getKey());
 				valueMap.remove(item.getKey());
+			} else {
+				valueMap.put(item.getKey(), item.getValue());
 			}
 		}
-		valueMap.putAll(valueDraft);
 		valueDraft.clear();
 
 		return this;
