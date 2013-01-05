@@ -22,6 +22,8 @@ public interface TalendRow {
 	
 	TalendRow setValue(TalendValue value);
 	
+	boolean supportTransactions();
+		
 	int countValues();
 	
 	boolean isEmpty();

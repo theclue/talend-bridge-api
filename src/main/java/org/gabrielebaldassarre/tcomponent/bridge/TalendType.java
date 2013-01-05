@@ -245,7 +245,7 @@ public enum TalendType {
 	 */
 	public String getTypeString() {
 		return super.toString();
-	}
+	}	
 	
 	private String removeDecimalDigitsFromString(String s) {
 		return removeDecimalDigitsFromStringPattern.matcher(s).replaceAll("");

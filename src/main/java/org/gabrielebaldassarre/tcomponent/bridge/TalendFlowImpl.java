@@ -34,21 +34,24 @@ import java.util.ResourceBundle;
 public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	
 	protected TalendFlowModelImpl model;
-	protected Map<String, TalendColumnImpl> columns;
+	protected Map<String, TalendColumn> columns;
 	protected Map<TalendColumnImpl, TalendColumnImpl> columnImpls;
 	protected List<TalendColumnImpl> columnsList;
 	protected final String name;
 	protected List<TalendRowImpl> rowList;
-	protected final Integer maximumSize; 
+	protected List<TalendRowImpl> rowdraft;
+	protected final Integer maximumSize;
+	protected boolean supportTransactions;
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendFlowImpl(TalendFlowModelImpl model, final String name, final Integer maximumSize){
+	public TalendFlowImpl(TalendFlowModelImpl model, final String name, final Integer maximumSize, boolean supportTransactions){
 				
+		this.supportTransactions = supportTransactions;
 		this.model = model;
 		this.name = name;
-		this.columns = new ConcurrentHashMap<String, TalendColumnImpl>();
+		this.columns = new ConcurrentHashMap<String, TalendColumn>();
 		this.columnImpls = new ConcurrentHashMap<TalendColumnImpl, TalendColumnImpl>();
 		this.columnsList = TalendListFactory.getInstance(TalendColumnImpl.class).newTalendList(new ArrayList<TalendColumnImpl>());
 		this.maximumSize = maximumSize;
@@ -79,14 +82,14 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 */
 	public TalendFlow addColumn(String name, TalendType type) {
-		addColumn(name, type, null, null);
+		addColumn(name, type, null, false);
 		return this;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, String comment) throws IllegalArgumentException {
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey, String comment) throws IllegalArgumentException {
 		
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if (name == null || name.isEmpty() || hasColumn(name)) {
@@ -107,7 +110,10 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
             }
 		}
  
-        TalendColumnImpl col = new TalendColumnImpl(this, columns.size(), name, type, defaultValue, comment);
+		/**
+		 * TODO: add support for key columns
+		 */
+        TalendColumnImpl col = new TalendColumnImpl(this, columns.size(), name, type, defaultValue, false, comment);
         
         columns.put(name, col);
         columnImpls.put(col, col);
@@ -153,7 +159,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
         }
 
         for(TalendRowImpl row : rowList){
-        	row.removeColumn((TalendColumnImpl) column);
+        	row.setValue(column, null, true);
         }
         
         columnsList.remove((TalendColumnImpl) column);
@@ -165,7 +171,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendColumnImpl getColumn(String name) {
+	public TalendColumn getColumn(String name) {
 		if(!columns.containsKey(name)) return null;
 		return columns.get(name);
 	}
@@ -204,8 +210,13 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 */
 	public void addRow(TalendRowImpl row){
-		rowList.add(row);
+		if(supportsTransactions() == true){
+			rowdraft.add(row);
+		} else {
+			rowList.add(row);
+		}
 	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -218,7 +229,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 * {@inheritDoc}
 	 */
 	public TalendFlow addColumn(String name, TalendType type, Object defaultValue) {
-		addColumn(name, type, defaultValue, null);
+		addColumn(name, type, defaultValue, false, null);
 		return this;
 	}
 
@@ -247,7 +258,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
             throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumnName"), name));
         }
 		List<TalendValue> slicedValues = new ArrayList<TalendValue>(countRows());
-		for(TalendRowImpl row : rowList){
+		for(TalendRow row : rowList){
 			slicedValues.add(row.getTalendValue(column.getName()));
 		}
 		
@@ -261,6 +272,26 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(rowList.size() < rownum+1) throw new IndexOutOfBoundsException(String.format(Locale.getDefault(), rb.getString("exception.invalidRowNum"), name, rownum));
 		return rowList.get(rownum);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean supportsTransactions() {
+		return supportTransactions;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void commit() {
+		rowList.addAll(rowdraft);
+		for(TalendRowImpl row : rowdraft){
+			row.presentInTable = true;
+		}
+		rowdraft.clear();
 	}
 
 }

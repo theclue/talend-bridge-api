@@ -63,6 +63,13 @@ public interface TalendColumn {
 	public TalendFlow getFlow();
 	
 	/**
+	 * Check if the column is part of the primary key for the associated table
+	 * 
+	 * @return true if the column is part of the key, false otherwise.
+	 */
+	public boolean isKey();
+	
+	/**
 	 * Get the literal linked to current column
 	 * 
 	 * @return comment linked to column

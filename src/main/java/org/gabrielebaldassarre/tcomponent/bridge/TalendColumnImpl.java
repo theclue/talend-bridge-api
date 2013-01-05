@@ -25,35 +25,37 @@ import java.io.Serializable;
  * @author Gabriele Baldassarre
  *
  */
-public class TalendColumnImpl implements Serializable, TalendColumn{
+public final class TalendColumnImpl implements Serializable, TalendColumn{
 
 	private static final long serialVersionUID = 8383916163449740885L;
 	private TalendFlowImpl table;
 	private String name;
+	private boolean isKey;
 	private String comment;
 	private TalendValueImpl defaultValue;
 	int index;
 	private TalendType type;
-	
-	public TalendColumnImpl(TalendFlowImpl table, int index, String name, TalendType type, Object defaultValue, String comment){
+
+	public TalendColumnImpl(TalendFlowImpl table, int index, String name, TalendType type, Object defaultValue, boolean isKey, String comment){
 		this.table = table;
 		this.name = name;
 		this.index = index;
 		this.type = type;
+		this.isKey = isKey;
 		this.comment = comment;
 		if(defaultValue != null){
 			this.defaultValue = new TalendValueImpl(this, defaultValue);
 		}
-		
+
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getName(){
 		return name;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -74,7 +76,7 @@ public class TalendColumnImpl implements Serializable, TalendColumn{
 	public int getIndex() {
 		return index;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -85,12 +87,36 @@ public class TalendColumnImpl implements Serializable, TalendColumn{
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean isKey(){
+		return isKey;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getComment() {
 		return comment;
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */	
 	public String toString(){
 		return "{TalendColumn flow=" + table.getName() + ", index=" + index + ", name=" + name + ", type=" + type.getType().getSimpleName() + "}";
 
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int hashCode(){
+		int hash = (index == 0 ? 1 : index);
+		hash = hash * 11 + table.getName().hashCode();
+		hash = hash * 7 + name.hashCode();
+		hash = hash * 3 + type.hashCode();
+		hash = hash * 13 + (defaultValue == null ? 0 : defaultValue.hashCode());
+		return hash;
+
+	}
+
 }

@@ -47,8 +47,8 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendFlow newFlow(String name, Integer maximumSize) {
-		TalendFlowImpl table = new TalendFlowImpl(model, name, maximumSize);
+	public TalendFlow newFlow(String name, Integer maximumSize, boolean supportTransactions) {
+		TalendFlowImpl table = new TalendFlowImpl(model, name, maximumSize, supportTransactions);
 		model.addFlow(name, table);
 		return table;
 		
@@ -58,7 +58,7 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	 * {@inheritDoc}
 	 */
 	public TalendRow newRow(String table) {
-		TalendRowImpl row = new TalendRowImpl(model.getFlow(table));
+		TalendRowImpl row = new TalendRowImpl(model.getFlow(table), !model.getFlow(table).supportsTransactions());
 		model.getFlow(table).addRow(row);
 		return row;
 	}
@@ -96,8 +96,8 @@ public class TalendFactoryImpl implements TalendFlowFactory, TalendRowFactory, T
 	/**
 	 * {@inheritDoc}
 	 */
-	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize) {
-		TalendFlow table = newFlow(name, maximumSize);
+	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize, boolean supportTransactions) {
+		TalendFlow table = newFlow(name, maximumSize, supportTransactions);
 		
 		Field[] fields = template.getFields();
 		for(Field f : fields){

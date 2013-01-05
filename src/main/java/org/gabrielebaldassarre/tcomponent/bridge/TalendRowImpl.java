@@ -12,11 +12,15 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	private TalendFlowImpl table;
 	private Map<TalendColumnImpl, TalendValue> valueMap;
 	private Map<TalendColumnImpl, TalendValue> valueDraft;
+	private boolean autosave;
+	public boolean presentInTable;
 	
-	public TalendRowImpl(TalendFlowImpl table){
+	public TalendRowImpl(TalendFlowImpl table, boolean autosave){
 		this.table = table;
 		this.valueMap = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(table.countColumns());
 		this.valueDraft = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(table.countColumns());
+		this.autosave = autosave;
+		this.presentInTable = !table.supportsTransactions();
 		init();
 	}
 
@@ -62,30 +66,34 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		return (val == null ? null : val.getValue());
 	}
 
-	public TalendRow setValue(String column, Object value) {
-		setValue(table.getColumn(column), value);
+	public TalendRow setValue(String column, Object value, boolean save) {
+		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
+		if(table.getColumn(column) == null){
+			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column, table.getName()));
+		}
+		setValue(table.getColumn(column), value,save);
 		return this;
 	}
 
-	public TalendRow setValue(int index, Object value) throws IllegalArgumentException {
+	public TalendRow setValue(int index, Object value, boolean save) throws IllegalArgumentException {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		TalendColumn col = table.getColumn(index);
 		if(col == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidIndex"), table.getName(), index));
 		}
-		setValue(col, value);
+		setValue(col, value, save);
 		return this;
 
 	}
 
-	public TalendRow setValue(TalendColumn column, Object value) {
+	public TalendRow setValue(TalendColumn column, Object value, boolean save) {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
-		if(table.getColumn(column) == null){
+		if(table.getColumn(column) == null || !column.getFlow().equals(table)){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
 		TalendValue val = table.getFactory().newValue(table.getColumn(column), value);
 		
-		setValue(val);
+		setValue(val, save);
 
 		return this;
 	}
@@ -102,7 +110,7 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		init();
 	}
 
-	public synchronized TalendRow setValue(TalendValue value) throws IllegalStateException {
+	public synchronized TalendRow setValue(TalendValue value, boolean save) throws IllegalStateException {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		if(table.getColumn(value.getColumn()) == null){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), value.getColumn(), table.getName()));
@@ -111,14 +119,18 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		TalendColumnImpl col = table.getColumn(value.getColumn());
 		
 		TalendValueImpl val = new TalendValueImpl(col, value.getValue());
-		valueDraft.put(col, val);
+		if(save == true){
+			mapValues(valueMap, col, val);
+		} else {
+			mapValues(valueDraft, col, val);
+		}
 		
 		return this;
 	}
 
 	private void init(){
 		for(TalendColumnImpl col : table.getColumns()){
-			setValue(new TalendValueImpl(col, col.getDefaultValue()));
+			setValue(new TalendValueImpl(col, col.getDefaultValue()), true);
 		}
 	}
 
@@ -143,25 +155,54 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	}
 
 	public TalendRow save() {
+		if(autosave == true) return this;
 		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueDraft.entrySet()){
-			if(item.getValue().getValue() == null){
-				valueMap.remove(item.getKey());
-			} else {
-				valueMap.put(item.getKey(), item.getValue());
-			}
+			mapValues(valueMap, item.getKey(), item.getValue());
 		}
 		valueDraft.clear();
-
 		return this;
 	}
 
 	public boolean isChanged() {
-		return valueDraft.size() > 0 ? true : false;
+		return autosave == true ? false : (valueDraft.size() > 0 ? true : false);
 	}
 
 	public void discardChanges() {
 		valueDraft.clear();
 		
+	}
+
+	@Override
+	public TalendRow setValue(String column, Object value) {
+		return setValue(column, value, this.autosave);
+	}
+
+	@Override
+	public TalendRow setValue(TalendColumn column, Object value) {
+		return setValue(column, value, this.autosave);
+	}
+
+	@Override
+	public TalendRow setValue(int index, Object value) {
+		return setValue(index, value, this.autosave);
+	}
+
+	@Override
+	public TalendRow setValue(TalendValue value) {
+		return setValue(value, this.autosave);
+	}
+	
+	private void mapValues(Map<TalendColumnImpl, TalendValue> valueMap, TalendColumnImpl key, TalendValue value){
+		if(value.getValue() == null){
+			valueMap.remove(key);
+		} else {
+			valueMap.put(key,  value);
+		}
+	}
+
+	@Override
+	public boolean supportTransactions() {
+		return !autosave;
 	}
 
 }

@@ -32,9 +32,10 @@ public interface TalendFlowFactory {
 	 * 
 	 * @param name the name of the new flow
 	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
+	 * @param supportTransactions set to true to save updated to flow only using a {@link commit()} call, false to save updates immediately
 	 * @return a reference to flow
 	 */
-	public TalendFlow newFlow(String name, Integer maximumSize);
+	public TalendFlow newFlow(String name, Integer maximumSize, boolean supportTransactions);
 	
 	/**
 	 * Build a new flow with the given names and add columns on it using the public
@@ -43,8 +44,9 @@ public interface TalendFlowFactory {
 	 * @param name the name of the new flow
 	 * @param template the struct to get the column list from. Only public fields are used.
 	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
+	 * @param supportTransactions true to save updates to flow only using a {@link commit()} call, false to save updates immediately
 	 * @return a reference to flow
 	 */
-	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize);
+	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize, boolean supportTransactions);
 
 }

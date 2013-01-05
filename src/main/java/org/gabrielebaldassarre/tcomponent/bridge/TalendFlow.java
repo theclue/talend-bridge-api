@@ -52,10 +52,11 @@ public interface TalendFlow {
 	 * 
 	 * @param name the name of the column; must be unique
 	 * @param type the type for the column, from supported types
+	 * @param isKey true if the column to add is part of the primary key for this flow
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
 	 * @return a reference to the flow itself
 	 */
-	public TalendFlow addColumn(String name, TalendType type, Object defaultValue);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey);
 	
 	/**
 	 * Add a column to current flow, with a default value and a comment
@@ -63,10 +64,11 @@ public interface TalendFlow {
 	 * @param name the name of the column; must be unique
 	 * @param type the type for the column, from supported types
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
+	 * @param isKey true if the column to add is part of the primary key for this flow
 	 * @param comment a comment literal
 	 * @return a reference to the flow itself
 	 */	
-	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, String comment);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey, String comment);
 	
 	/**
 	 * Check if the column with the given name exists in the flow
@@ -151,5 +153,15 @@ public interface TalendFlow {
 	 * @return an array containing the values from the specified column taken from each not-null row
 	 */
 	public TalendValue[] sliceRows(TalendColumn column);
-
+	
+	/**
+	 * Check if the flow support transactions and, consequently, {@link commit} operations
+	 */
+	public boolean supportsTransactions();
+	
+	/**
+	 * Commit changes to flow; if current table doesn't support transactions, the method has no effect
+	 */
+	public void commit();
+	
 }
