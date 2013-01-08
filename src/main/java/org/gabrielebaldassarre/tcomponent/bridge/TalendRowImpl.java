@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourableRow {
+public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourableRow, Cloneable {
 
 	private static final long serialVersionUID = 3990672272324520026L;
 	private TalendFlowImpl table;
@@ -230,6 +230,18 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		}		
 
 		return keycolumnbuffer;
+	}
+	
+	public TalendRow clone(){
+		TalendRow cloned = table.getFactory().newRow(table);
+		
+		Map<TalendColumnImpl, TalendValue> clonedValues = new ConcurrentHashMap<TalendColumnImpl, TalendValue>(valueMap);
+		clonedValues.putAll(valueDraft);
+		
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : clonedValues.entrySet()){
+			cloned.setValue(item.getValue());
+		}
+		return cloned;
 	}
 
 }

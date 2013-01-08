@@ -36,5 +36,6 @@ public interface TalendRow {
 	
 	boolean isChanged();
 	
+	TalendRow clone();
 	
 }
