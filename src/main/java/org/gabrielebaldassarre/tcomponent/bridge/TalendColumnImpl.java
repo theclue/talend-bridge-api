@@ -17,6 +17,7 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * This is a memory-based concrete implementation of a {@link TalendColumn} and should never be used
@@ -30,19 +31,15 @@ public final class TalendColumnImpl implements Serializable, TalendColumn{
 	private static final long serialVersionUID = 8383916163449740885L;
 	private TalendFlowImpl table;
 	private String name;
-	private boolean isKey;
-	private String comment;
 	private TalendValueImpl defaultValue;
 	int index;
 	private TalendType type;
 
-	public TalendColumnImpl(TalendFlowImpl table, int index, String name, TalendType type, Object defaultValue, boolean isKey, String comment){
+	public TalendColumnImpl(TalendFlowImpl table, int index, String name, TalendType type, Object defaultValue){
 		this.table = table;
 		this.name = name;
 		this.index = index;
 		this.type = type;
-		this.isKey = isKey;
-		this.comment = comment;
 		if(defaultValue != null){
 			this.defaultValue = new TalendValueImpl(this, defaultValue);
 		}
@@ -88,14 +85,7 @@ public final class TalendColumnImpl implements Serializable, TalendColumn{
 	 * {@inheritDoc}
 	 */
 	public boolean isKey(){
-		return isKey;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getComment() {
-		return comment;
+		return Arrays.asList(table.getKeyColumns()).contains(this);
 	}
 
 	/**
@@ -119,4 +109,17 @@ public final class TalendColumnImpl implements Serializable, TalendColumn{
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */	
+	public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof TalendColumnImpl)) {
+            return false;
+        }
+        TalendColumnImpl other = (TalendColumnImpl) obj;
+        return this.getType().equals(other.getType()) && this.getName().equals(other.getName()) && this.getFlow().equals(other.getFlow());
+    }
 }

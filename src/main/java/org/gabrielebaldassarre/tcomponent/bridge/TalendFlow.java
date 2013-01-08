@@ -52,11 +52,10 @@ public interface TalendFlow {
 	 * 
 	 * @param name the name of the column; must be unique
 	 * @param type the type for the column, from supported types
-	 * @param isKey true if the column to add is part of the primary key for this flow
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
 	 * @return a reference to the flow itself
 	 */
-	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue);
 	
 	/**
 	 * Add a column to current flow, with a default value and a comment
@@ -65,10 +64,9 @@ public interface TalendFlow {
 	 * @param type the type for the column, from supported types
 	 * @param defaultValue default type for rows of that column; must be of the same type (or parseable, if a string) of the column
 	 * @param isKey true if the column to add is part of the primary key for this flow
-	 * @param comment a comment literal
 	 * @return a reference to the flow itself
 	 */	
-	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey, String comment);
+	public TalendFlow addColumn(String name, TalendType type, Object defaultValue, boolean isKey);
 	
 	/**
 	 * Check if the column with the given name exists in the flow
@@ -145,6 +143,13 @@ public interface TalendFlow {
 	 * @throws IndexOutOfBoundsException if there's no element at that position
 	 */
 	public TalendRow getRow(int rownum) throws IndexOutOfBoundsException;
+	
+	/**
+	 * Return an array with references to all key columns of the table
+	 * 
+	 * @return an array with references to columns
+	 */
+	public TalendColumn[] getKeyColumns();
 	
 	/**
 	 * Slice the flow and get only values from the specified column

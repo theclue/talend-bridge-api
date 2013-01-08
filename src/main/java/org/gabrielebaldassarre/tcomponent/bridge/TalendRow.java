@@ -30,7 +30,7 @@ public interface TalendRow {
 	
 	void truncate();
 	
-	TalendRow save();
+	//TalendRow save();
 	
 	void discardChanges();
 	

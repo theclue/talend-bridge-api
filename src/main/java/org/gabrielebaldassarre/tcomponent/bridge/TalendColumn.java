@@ -68,11 +68,5 @@ public interface TalendColumn {
 	 * @return true if the column is part of the key, false otherwise.
 	 */
 	public boolean isKey();
-	
-	/**
-	 * Get the literal linked to current column
-	 * 
-	 * @return comment linked to column
-	 */
-	public String getComment();
+
 }

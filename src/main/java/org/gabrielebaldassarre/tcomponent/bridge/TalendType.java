@@ -252,5 +252,4 @@ public enum TalendType {
 	}
 	private static final Pattern removeDecimalDigitsFromStringPattern = Pattern.compile("\\.[0-9]*");
 
-
 }

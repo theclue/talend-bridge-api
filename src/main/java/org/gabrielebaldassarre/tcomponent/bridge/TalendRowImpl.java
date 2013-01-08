@@ -91,6 +91,11 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		if(table.getColumn(column) == null || !column.getFlow().equals(table)){
 			throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidColumn"), column.getName(), table.getName()));
 		}
+		
+		if(presentInTable == true && column.isKey()){
+			throw new IllegalStateException(String.format(Locale.getDefault(), rb.getString("exception.cannotAlterKeyValues"), column.getName(), table.getName()));
+		}
+		
 		TalendValue val = table.getFactory().newValue(table.getColumn(column), value);
 		
 		setValue(val, save);
@@ -138,7 +143,7 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		String values = "{TalendRow flow=" + table.getName();
 
 		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueMap.entrySet()){
-			values += ", " + item.getKey().getName() + "=" + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue() + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + ")";
+			values += ", " + item.getKey().getName() + "=" + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + item.getValue().getValue() + (item.getValue().getValue() != null && item.getKey().getType() == TalendType.STRING ? "\'" : "") + " (" + item.getKey().getType() + (item.getKey().isKey() == true ? " - PK" : "") + ")";
 		}
 		values += "}";
 		return values;
@@ -156,6 +161,13 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 
 	public TalendRow save() {
 		if(autosave == true) return this;
+
+		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
+		
+		if(getKeySet().size() < table.getKeyColumns().length){
+			throw new IllegalStateException(String.format(Locale.getDefault(), rb.getString("exception.cannotSaveRow"), table.getName()));
+		}
+		
 		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueDraft.entrySet()){
 			mapValues(valueMap, item.getKey(), item.getValue());
 		}
@@ -203,6 +215,21 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	@Override
 	public boolean supportTransactions() {
 		return !autosave;
+	}
+	
+	public Map<TalendColumn, TalendValue> getKeySet(){
+		
+		Map<TalendColumn, TalendValue> keycolumnbuffer = new ConcurrentHashMap<TalendColumn, TalendValue>();
+		
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueMap.entrySet()){
+			if(item.getKey().isKey() && item.getValue().getValue() != null) keycolumnbuffer.put(item.getKey(), item.getValue());
+		}
+
+		for(Map.Entry<TalendColumnImpl, TalendValue> item : valueDraft.entrySet()){
+			if(item.getKey().isKey() && item.getValue().getValue() != null) keycolumnbuffer.put(item.getKey(), item.getValue());
+		}		
+
+		return keycolumnbuffer;
 	}
 
 }
