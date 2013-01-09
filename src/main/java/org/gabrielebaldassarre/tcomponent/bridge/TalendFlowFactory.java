@@ -16,11 +16,15 @@
  */
 package org.gabrielebaldassarre.tcomponent.bridge;
 /**
- * This is the factory used to build new flows in the model. Since this factory has no sense outside
+ * This is the factory used to build new flows in data model.<br />
+ * Think of flows like tables in traditional RDBMS, with columns, rows, cells, primary keys and indexes.
+ * Since this factory has no sense outside
  * of a model, use model's {@link getFlowFactory} to
- * get an instance of the current factory.
+ * get an instance of the current factory.<br />
+ * See {@see TalendFlow} for some examples on how to use this factory.
  * 
  * @author Gabriele Baldassarre
+ * @see TalendFlowModel
  *
  */
 public interface TalendFlowFactory {
@@ -34,18 +38,21 @@ public interface TalendFlowFactory {
 	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
 	 * @param supportTransactions set to true to save updated to flow only using a {@link commit()} call, false to save updates immediately
 	 * @return a reference to flow
+	 * @throws IllegalArgumentException if maximumSize is less than zero
+	 * @throws IllegalArgumentException if the name for the flow is empty, null or invalid
 	 */
 	public TalendFlow newFlow(String name, Integer maximumSize, boolean supportTransactions);
 	
 	/**
 	 * Build a new flow with the given names and add columns on it using the public
-	 * fields of template class.
+	 * fields of a provided template class.
 	 * 
 	 * @param name the name of the new flow
 	 * @param template the struct to get the column list from. Only public fields are used.
 	 * @param maximumSize the maximum number of rows to retain; null for unlimited size
 	 * @param supportTransactions true to save updates to flow only using a {@link commit()} call, false to save updates immediately
 	 * @return a reference to flow
+	 * @throws IllegalArgumentException if the name for the flow is empty, null or invalid
 	 */
 	public TalendFlow newFlow(String name, Class<?> template, Integer maximumSize, boolean supportTransactions);
 

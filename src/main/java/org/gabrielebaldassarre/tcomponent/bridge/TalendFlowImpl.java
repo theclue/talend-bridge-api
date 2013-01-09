@@ -26,10 +26,11 @@ import java.util.ResourceBundle;
 
 /**
  * This is the concrete implementation of a flow and therefore should not be used in normal circumnstances.
- * You should build instances using {@link TalendFlowFactory} instead.
+ * You should build instances using {@link TalendFlowFactory} instead and interface with flow using {@link TalendFlow} interface.
  * 
  * @author Gabriele Baldassarre
- *
+ * @see TalendFlowFactory
+ * @see TalendFlow
  */
 public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	
@@ -338,6 +339,30 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	@Override
 	public TalendColumn[] getKeyColumns() {
 		return keyList.toArray(new TalendColumnImpl[keyList.size()]);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Integer getMaximumSize() {
+		return maximumSize;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void rollback() {
+		for(TalendRowImpl row : rowdraft){
+			if(row.presentInTable == false) {
+				//index.put(row.getKeySet(), 1);
+				index.add(row.getKeySet());
+			}
+			row.presentInTable = true;
+			row.discardChanges();
+		}
+		rowdraft.clear();
 	}
 
 }

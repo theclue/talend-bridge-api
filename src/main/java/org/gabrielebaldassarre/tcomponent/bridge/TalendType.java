@@ -27,9 +27,10 @@ import java.util.regex.Pattern;
 import java.util.Locale;
 import java.util.ResourceBundle;
 /**
- * This enum rapresents the whole set of supported datatypes of a column.
+ * This enum rapresents the whole set of supported datatypes of a column<br />
  * It's used to bridge between Talend types taxonomy, java primitives
- * and eventually other taxonomies and to build instance of given types.
+ * and eventually other taxonomies.<br/>
+ * It can also be used to build instance of given types.
  * 
  * TODO: Lists are not so well supported yet...
  * 
@@ -61,7 +62,8 @@ public enum TalendType {
 
 	/**
 	 * Build a type from a pair of java nullable type and its
-	 * optional primitive wrapper class. The Talend id is build accordingly.
+	 * optional primitive wrapper class<br/>
+	 * The Talend id is built accordingly.
 	 * 
 	 * @param java the nullable java class of the type
 	 * @param primitive the non-nullable primitive wrapper class of the type
@@ -74,7 +76,7 @@ public enum TalendType {
 	}
 
 	/**
-	 * Build an instance of TalendType from a given object.
+	 * Build an instance of TalendType from a given object
 	 * 
 	 * @param obj a generic object from which type a TalendType instance is build from
 	 * @return a TalendType instance of the right type or null if object is not a supported datatype
@@ -84,7 +86,7 @@ public enum TalendType {
 		return (obj == null ? null : buildFrom(obj.getClass()));
 	}
 	/**
-	 * Build an instance of TalendType from a given Class.
+	 * Build an instance of TalendType from a given Class
 	 * 
 	 * @param class a generic class from which type a TalendType instance is build from
 	 * @return a TalendType instance of the right type or null if object is not a supported datatype
