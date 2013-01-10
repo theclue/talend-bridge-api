@@ -365,4 +365,9 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 		rowdraft.clear();
 	}
 
+	@Override
+	public TalendFlowModel getModel() {
+		return model;
+	}
+
 }

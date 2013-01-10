@@ -280,8 +280,13 @@ public interface TalendFlow {
 	public Integer getMaximumSize();
 	
 	/**
+	 * Get the model which the flow belongs
+	 */
+	public TalendFlowModel getModel();
+
+	/**
 	 * Discard all data changes made from the last commit.
 	 */
 	public void rollback();
-
+	
 }
