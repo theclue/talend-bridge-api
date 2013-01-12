@@ -17,7 +17,7 @@ public final class TalendValueImpl implements TalendValue, Serializable {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		this.column = column;	
 		if (value != null) {
-            if (value.getClass() != column.getType().getType()) {
+            if (!column.getType().equals(TalendType.OBJECT) && value.getClass() != column.getType().getType()) {
                 if (value.getClass() == String.class) {
                     value = column.getType().parse((String) value);
                 } else {
