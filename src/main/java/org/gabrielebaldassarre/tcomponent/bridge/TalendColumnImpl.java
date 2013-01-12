@@ -85,6 +85,7 @@ public final class TalendColumnImpl implements Serializable, TalendColumn{
 	 * {@inheritDoc}
 	 */
 	public boolean isKey(){
+		if(table.getKeyColumns() == null) return false;
 		return Arrays.asList(table.getKeyColumns()).contains(this);
 	}
 

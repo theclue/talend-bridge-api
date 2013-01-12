@@ -338,6 +338,7 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	 */
 	@Override
 	public TalendColumn[] getKeyColumns() {
+		if(keyList == null) return null;
 		return keyList.toArray(new TalendColumnImpl[keyList.size()]);
 	}
 	
