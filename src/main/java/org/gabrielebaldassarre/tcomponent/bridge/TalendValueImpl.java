@@ -1,6 +1,7 @@
 package org.gabrielebaldassarre.tcomponent.bridge;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -18,10 +19,11 @@ public final class TalendValueImpl implements TalendValue, Serializable {
 		this.column = column;	
 		if (value != null) {
             if (!column.getType().equals(TalendType.OBJECT) && value.getClass() != column.getType().getType()) {
-                if (value.getClass() == String.class) {
+                if (value.getClass().equals(String.class)) {
                     value = column.getType().parse((String) value);
                 } else {
-                	throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidTalendParameter"), value, column.getType().getType().getSimpleName()));
+                	if(column.getType().equals(TalendType.LIST) && !implementsInterface(value, List.class))
+                		throw new IllegalArgumentException(String.format(Locale.getDefault(), rb.getString("exception.invalidTalendParameter"), value, column.getType().getType().getSimpleName()));
                 }
             }
 		}
@@ -34,6 +36,15 @@ public final class TalendValueImpl implements TalendValue, Serializable {
 	 */
 	public TalendColumn getColumn() {
 		return column;
+	}
+	
+	private boolean implementsInterface(final Object object, final Class interf){
+	    for (Class<?> c : object.getClass().getInterfaces()) {
+	        if (c.equals(interf)) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	
 	/**
