@@ -101,7 +101,7 @@ public enum TalendType {
 				return talendType;
 			}
 		}
-		return null;
+		return TalendType.OBJECT;
 	}
 
 	/**
