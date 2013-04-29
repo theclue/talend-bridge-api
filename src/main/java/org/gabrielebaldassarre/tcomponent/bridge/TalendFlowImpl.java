@@ -44,15 +44,19 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	protected List<TalendRowImpl> rowdraft;
 	protected final Integer maximumSize;
 	protected boolean supportTransactions;
+	private boolean waitToTruncate;
 	
 	//protected Map<Map<TalendColumn, TalendValue>> index;
+	@SuppressWarnings("rawtypes")
 	protected List<Map> index;
 	
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("rawtypes")
 	public TalendFlowImpl(TalendFlowModelImpl model, final String name, final Integer maximumSize, boolean supportTransactions){
-				
+		
+		this.waitToTruncate = false;
 		this.supportTransactions = supportTransactions;
 		this.model = model;
 		this.name = name;
@@ -316,6 +320,11 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	public void commit() {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		
+		if(waitToTruncate == true) {
+			rowList.clear();
+			return;
+		}
+		
 		for(TalendRowImpl row : rowdraft){
 			if((index.size()-1) > 0 && index.contains(row.getKeySet())) {
 				throw new IllegalStateException(String.format(Locale.getDefault(), rb.getString("exception.duplicateKey"), name));
@@ -369,6 +378,16 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	@Override
 	public TalendFlowModel getModel() {
 		return model;
+	}
+
+	@Override
+	public void truncate() {
+		if(supportsTransactions() == true){
+			rowdraft.clear();
+			waitToTruncate = true;
+		} else {
+			rowList.clear();
+		}
 	}
 
 }

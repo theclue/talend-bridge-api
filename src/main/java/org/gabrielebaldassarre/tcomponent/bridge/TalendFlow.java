@@ -289,4 +289,8 @@ public interface TalendFlow {
 	 */
 	public void rollback();
 	
+	/**
+	 * Truncate the current data flow
+	 */
+	public void truncate();
 }
