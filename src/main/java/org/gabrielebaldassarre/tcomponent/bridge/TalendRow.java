@@ -59,7 +59,7 @@ public interface TalendRow {
 	 * 
 	 * @return a reference to flow
 	 */
-	TalendFlow getTable();
+	public TalendFlow getTable();
 
 	/**
 	 * Return the value of the column at the given index
@@ -68,7 +68,7 @@ public interface TalendRow {
 	 * @return the value or null if not value is  defined for the column at given index
 	 * @throws IllegalArgumentException if no valid column is found in providing flow at given index
 	 */
-	TalendValue getTalendValue(int index);
+	public TalendValue getTalendValue(int index);
 
 	/**
 	 * Return the value of the column with given column name
@@ -77,14 +77,14 @@ public interface TalendRow {
 	 * @return the value or null if not value is the defined for the column with given name
 	 * @throws IllegalArgumentException if no valid column is found in providing flow with given name
 	 */
-	TalendValue getTalendValue(String column);
+	public TalendValue getTalendValue(String column);
 
 	/**
 	 * Return an array with the whole set of values from the current row
 	 * 
 	 * @return an arrayset with values
 	 */
-	TalendValue[] getTalendValues();
+	public TalendValue[] getTalendValues();
 
 	/**
 	 * Return the value of the column at the given index
@@ -93,7 +93,7 @@ public interface TalendRow {
 	 * @return the value as java type or null if not value is  defined for the column at given index
 	 * @throws IllegalArgumentException if no valid column is found in providing flow at given index
 	 */	
-	Object getValue(int index);
+	public Object getValue(int index);
 
 	/**
 	 * Return the value of the column with given column name
@@ -102,7 +102,7 @@ public interface TalendRow {
 	 * @return the value as java type or null if not value is the defined for the column with given name
 	 * @throws IllegalArgumentException if no valid column is found in providing flow with given name
 	 */	
-	Object getValue(String column);
+	public Object getValue(String column);
 
 	/**
 	 * Set the value for the column with the given name.<br />
@@ -129,7 +129,7 @@ public interface TalendRow {
 	 * @throws IllegalArgumentException if no valid column is found in providing flow with given name
 	 * @throws IllegalStateException if trying to alter the value of a column which is part of the primary key and the row was already saved to flow
 	 */
-	TalendRow setValue(String column, Object value);
+	public TalendRow setValue(String column, Object value);
 
 	/**
 	 * Set the value for the given column.<br />
@@ -144,7 +144,7 @@ public interface TalendRow {
 	 * @throws IllegalArgumentException if column doesn't belong to flow which the row belongs
 	 * @throws IllegalStateException if trying to alter the value of a column which is part of the primary key and the row was already saved to flow
 	 */
-	TalendRow setValue(TalendColumn column, Object value);
+	public TalendRow setValue(TalendColumn column, Object value);
 
 	/**
 	 * Set the value for the column at given index.<br />
@@ -159,7 +159,7 @@ public interface TalendRow {
 	 * @throws IllegalArgumentException if no valid column is found in providing flow at given index
 	 * @throws IllegalStateException if trying to alter the value of a column which is part of the primary key and the row was already saved to flow
 	 */
-	TalendRow setValue(int index, Object value);
+	public TalendRow setValue(int index, Object value);
 
 	/**
 	 * Set the value for the column which the value itself is associated.<br />
@@ -174,21 +174,21 @@ public interface TalendRow {
 	 * @throws IllegalArgumentException if no valid column is found in providing flow at given index
 	 * @throws IllegalStateException if trying to alter the value of a column which is part of the primary key and the row was already saved to flow
 	 */
-	TalendRow setValue(TalendValue value);
+	public TalendRow setValue(TalendValue value);
 
 	/**
 	 * Check if the row support transactions
 	 * 
 	 * @return true if belonging flow (and, consequantely, the row) supports transactions, false otherwise
 	 */
-	boolean supportTransactions();
+	public boolean supportTransactions();
 
 	/**
 	 * Count the number of non-null values in row
 	 * 
 	 * @return the number of non-null values
 	 */
-	int countValues();
+	public int countValues();
 
 	/**
 	 * Check if current row is empty, ie all its values points to null<br />
@@ -196,14 +196,14 @@ public interface TalendRow {
 	 * 
 	 * @return true if row is empty, false otherwise
 	 */
-	boolean isEmpty();
+	public boolean isEmpty();
 
 	/**
 	 * Truncate the current row<br />
 	 * If some columns admit default non-null values, values for these columns is reverted to defaults.
 	 * 
 	 */
-	void truncate();
+	public void truncate();
 
 	//TalendRow save();
 
@@ -214,7 +214,7 @@ public interface TalendRow {
 	 * 
 	 * @return true if there are changes still not commited to row, false otherwise or if parent flow doesn't support transactions.
 	 */
-	boolean isChanged();
+	public boolean isChanged();
 
 	/**
 	 * Clone the current row making a new rows with values equals to current one.<br />
@@ -222,6 +222,6 @@ public interface TalendRow {
 	 * This mean that it's still possible to make setValue to cloned row (even on key columns).<br >
 	 * @return a reference to cloned row
 	 */
-	TalendRow clone();
+	 public TalendRow clone();
 
 }

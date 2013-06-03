@@ -278,7 +278,6 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TalendRow setValue(String column, Object value) {
 		return setValue(column, value, this.autosave);
 	}
@@ -286,7 +285,6 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TalendRow setValue(TalendColumn column, Object value) {
 		return setValue(column, value, this.autosave);
 	}
@@ -294,7 +292,6 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TalendRow setValue(int index, Object value) {
 		return setValue(index, value, this.autosave);
 	}
@@ -302,7 +299,6 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TalendRow setValue(TalendValue value) {
 		return setValue(value, this.autosave);
 	}
@@ -318,7 +314,6 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean supportTransactions() {
 		return !autosave;
 	}
@@ -355,5 +350,4 @@ public class TalendRowImpl implements Serializable, TalendRow, TalendBehaviourab
 		}
 		return cloned;
 	}
-
 }

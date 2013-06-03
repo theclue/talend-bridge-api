@@ -18,11 +18,11 @@ package org.gabrielebaldassarre.tcomponent.bridge;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This is the concrete implementation of a flow and therefore should not be used in normal circumnstances.
@@ -308,7 +308,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean supportsTransactions() {
 		return supportTransactions;
 	}
@@ -316,7 +315,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void commit() {
 		ResourceBundle rb = ResourceBundle.getBundle("TalendBridge", Locale.getDefault());
 		
@@ -345,7 +343,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TalendColumn[] getKeyColumns() {
 		if(keyList == null) return null;
 		return keyList.toArray(new TalendColumnImpl[keyList.size()]);
@@ -354,7 +351,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Integer getMaximumSize() {
 		return maximumSize;
 	}
@@ -362,7 +358,6 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void rollback() {
 		for(TalendRowImpl row : rowdraft){
 			if(row.presentInTable == false) {
@@ -375,12 +370,10 @@ public class TalendFlowImpl implements TalendFlow, TalendBehaviourableFlow {
 		rowdraft.clear();
 	}
 
-	@Override
 	public TalendFlowModel getModel() {
 		return model;
 	}
 
-	@Override
 	public void truncate() {
 		if(supportsTransactions() == true){
 			rowdraft.clear();
