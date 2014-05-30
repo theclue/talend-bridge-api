@@ -89,7 +89,7 @@ public interface TalendRow {
 	/**
 	 * Return the value of the column at the given index
 	 * 
-	 * @param index the colum index from which retrieve the desired value
+	 * @param index the column index from which retrieve the desired value
 	 * @return the value as java type or null if not value is  defined for the column at given index
 	 * @throws IllegalArgumentException if no valid column is found in providing flow at given index
 	 */	
